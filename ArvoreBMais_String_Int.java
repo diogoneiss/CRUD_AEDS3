@@ -13,9 +13,6 @@
  * Implementado pelo Prof. Marcos Kutova
  * v1.0 - 2018
  */
-
-
-package aed3;
 import java.io.*;
 import java.util.ArrayList;
 

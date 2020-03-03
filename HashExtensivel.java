@@ -13,8 +13,6 @@
  * Implementado pelo Prof. Marcos Kutova
  * v1.0 - 2019
  */
-package aed3;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -24,7 +22,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Scanner;
 
-public class HashExtensível {
+public class HashExtensivel {
 
     String nomeArquivoDiretorio;
     String nomeArquivoCestos;
@@ -271,7 +269,7 @@ public class HashExtensível {
 
     }
 
-    public HashExtensível(int n, String nd, String nc) throws Exception {
+    public HashExtensivel(int n, String nd, String nc) throws Exception {
         quantidadeDadosPorCesto = n;
         nomeArquivoDiretorio = nd;
         nomeArquivoCestos = nc;
@@ -486,11 +484,11 @@ public class HashExtensível {
     // Método principal apenas para testes
     public static void main(String[] args) {
 
-        HashExtensível he;
+        HashExtensivel he;
         Scanner console = new Scanner(System.in);
 
         try {
-            he = new HashExtensível(4, "diretorio.hash.db", "cestos.hash.db");
+            he = new HashExtensivel(4, "diretorio.hash.db", "cestos.hash.db");
 
             int opcao;
             do {
@@ -548,6 +546,8 @@ public class HashExtensível {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        console.close();
     }
 
 }
