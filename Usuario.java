@@ -4,6 +4,24 @@ public class Usuario {
     private int id;
     private String nome, email, senha;
 
+    public Usuario(){
+
+    }
+
+    /**
+     * Construtor com bytes passados por param
+     * 
+     * @param bytes
+     */
+    public Usuario(byte[] bytes){       
+        try {
+            this.fromByteArray(bytes);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+       
+    }
+
     public Usuario(int id, String nome, String email, String senha) {
         this.setId(id);
         this.setEmail(email);
@@ -30,11 +48,28 @@ public class Usuario {
     public int getId() {
         return this.id;
     }
-
-    public String chaveSecundaria() {
+    public String getEmail() {
         return this.email;
     }
 
+    public String getNome() {
+        return this.nome;
+    }
+    public String getSenha() {
+        return this.senha;
+    }
+
+
+
+    public String chaveSecundaria() {
+        return getEmail();
+    }
+
+    /**
+     * Conversão de usuário para byteArray
+     * @return array de bytes com os dados escritos
+     * @throws IOException
+     */
     public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream dados = new ByteArrayOutputStream();
         DataOutputStream saida = new DataOutputStream(dados);
@@ -45,6 +80,12 @@ public class Usuario {
         return dados.toByteArray();
     }
 
+    /**
+     * Leitura de um byte array no usuário vazio.
+     * 
+     * @param bytes
+     * @throws IOException
+     */
     public void fromByteArray(byte[] bytes) throws IOException {
         ByteArrayInputStream dados = new ByteArrayInputStream(bytes);
         DataInputStream entrada = new DataInputStream(dados);
@@ -60,34 +101,5 @@ public class Usuario {
         retorno += "Email: " + this.email + '\n';
 
         return retorno;
-    }
-}
-
-class Crud {
-    RandomAccessFile usuarios;
-
-    public Crud() throws Exception {
-        usuarios = new RandomAccessFile("usuarios.db", "rw");
-        if (usuarios.length() == 0) {
-            usuarios.writeInt(0);
-        }
-    }
-
-    public int creat(String nome, String email, String senha) throws Exception {
-        usuarios.seek(0);
-        int id = usuarios.readInt() + 1;// ler o ultimo id usado e somar um para obter o novo id
-        Usuario temp = new Usuario(id, nome, email, senha);
-        long indereco = usuarios.length();
-        usuarios.seek(usuarios.length());// aponta o ponteiro para o fim do arquivo
-        ByteArrayOutputStream dados = new ByteArrayOutputStream();
-        DataOutputStream saida = new DataOutputStream(dados);
-        saida.writeChar(' ');// escreve a lapide
-        saida.writeInt(temp.toByteArray().length);
-        usuarios.write(dados.toByteArray());// escreve o tamanho do registro
-        usuarios.write(temp.toByteArray());// escreve o registro
-        usuarios.seek(0);
-        usuarios.writeInt(id);// atualiza o id
-        // idexar
-        return id;
     }
 }
