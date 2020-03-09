@@ -44,7 +44,7 @@ public class CRUD {
         long endereco = arquivo.length();
 
         arquivo.seek(arquivo.length());// aponta o ponteiro para o fim do arquivo
-        
+
         ByteArrayOutputStream dados = new ByteArrayOutputStream();
         DataOutputStream saida = new DataOutputStream(dados);
 
@@ -56,5 +56,15 @@ public class CRUD {
         arquivo.writeInt(id);// atualiza o id
         // idexar
         return id;
+    }
+    public boolean update(int id){
+        boolean failStatus = false;
+
+        return failStatus;
+    }
+    public boolean delete(int id){
+        boolean failStatus = false;
+
+        return failStatus;
     }
 }
