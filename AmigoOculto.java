@@ -1,12 +1,10 @@
 public class AmigoOculto {
-   public static void main(String args[]) {
+   public static void main(String args[]) throws Exception {
       System.out.println("Teste");
-      try {
+      
           CRUD amigoOculto = new CRUD("amigos");  
           amigoOculto.create("diogo", "diogo@", "1234");
 
-      } catch (Exception e) {
-          //TODO: handle exception
-      }
-  }
+      
+}
 }

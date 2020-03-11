@@ -62,7 +62,7 @@ public class Usuario {
 
 
 
-    public String chaveSecundaria() {
+    public String getChaveSecundaria() {
         return getEmail();
     }
 

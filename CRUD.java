@@ -39,21 +39,18 @@ public class CRUD {
 
         arquivo.seek(0);
         int id = arquivo.readInt() + 1;// ler o ultimo id usado e somar um para obter o novo id
+        arquivo.seek(0);
+        arquivo.writeInt(id);// atualiza o id
 
         Usuario temp = new Usuario(id, nome, email, senha);
-        long endereco = arquivo.length();
 
         arquivo.seek(arquivo.length());// aponta o ponteiro para o fim do arquivo
 
-        ByteArrayOutputStream dados = new ByteArrayOutputStream();
-        DataOutputStream saida = new DataOutputStream(dados);
-
-        saida.writeChar(' ');// escreve a lapide
-        saida.writeInt(temp.toByteArray().length);
-        arquivo.write(dados.toByteArray());// escreve o tamanho do registro
+        arquivo.writeChar(' ');// escreve a lapide
+        arquivo.writeInt(temp.toByteArray().length); // escreve o tamanho do registro
         arquivo.write(temp.toByteArray());// escreve o registro
-        arquivo.seek(0);
-        arquivo.writeInt(id);// atualiza o id
+        
+        
         // idexar
         return id;
     }
