@@ -39,7 +39,7 @@ public class CRUD {
 
         arquivo.seek(0);
         int id = arquivo.readInt() + 1;// ler o ultimo id usado e somar um para obter o novo id
-
+    
         Usuario temp = new Usuario(id, nome, email, senha);
         long endereco = arquivo.length();
 
@@ -56,6 +56,7 @@ public class CRUD {
     }
     public Usuario read(int id) throws Exception{
         long endereco=índiceDireto.read(id);
+        System.out.println("Endereço: "+endereco);
         arquivo.seek(endereco);
         char lapide=arquivo.readChar();
         if(lapide!=' ') throw new Exception("Erro! arquivo deletado");
