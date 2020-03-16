@@ -14,12 +14,10 @@
  * v1.0 - 2018
  */
 
-
-package aed3;
 import java.io.*;
 import java.util.ArrayList;
 
-// Árvore B+ para ser usada como índice indireto de algum arquivo de entidades
+// Árvore B+ para ser usada como indice indireto de algum arquivo de entidades
 // CHAVE: String  (usado para algum atributo textual da entidade como Nome, Título, ...)
 // VALOR: Int     (usado para o identificador dessa entidade)
 
@@ -916,7 +914,7 @@ public class ArvoreBMais_String_Int {
     }
        
     
-    // Apaga o arquivo do índice, para que possa ser reconstruído
+    // Apaga o arquivo do indice, para que possa ser reconstruído
     public void apagar() throws IOException {
 
         File f = new File(nomeArquivo);

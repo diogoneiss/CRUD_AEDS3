@@ -20,11 +20,11 @@ public class CRUD {
             arquivo.writeInt(0);  // cabeçalho do arquivo
 
         índiceDireto = new HashExtensivel( 10, 
-                           "diretorio."+nomeArquivo+".idx", 
-                           "cestos."+nomeArquivo+".idx");
+                    this.diretorio + "/"+"diretorio."+nomeArquivo+".idx", 
+                           this.diretorio+"/" + "cestos."+nomeArquivo+".idx");
 
         índiceIndireto = new ArvoreBMais_String_Int( 10,
-                           this.diretorio+"/arvoreB."+nomeArquivo+".idx");
+                           this.diretorio+"/"+ "arvoreB."+nomeArquivo+".idx");
     }
 
     /**

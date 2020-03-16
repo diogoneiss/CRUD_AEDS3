@@ -13,7 +13,7 @@ public class AmigoOculto {
             a = amigoOculto.read(1);
             System.out.println(" aaa " + a.getEmail() + " " + a.getNome());
             amigoOculto.delete(1);
-            a = amigoOculto.read(1);
+            //a = amigoOculto.read(1);
         } catch (Exception e) {
             System.out.println("erro");
             e.printStackTrace();
