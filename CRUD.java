@@ -20,6 +20,7 @@ public class CRUD {
             arquivo.writeInt(0);  // cabeçalho do arquivo
 
         índiceDireto = new HashExtensivel( 10, 
+
                     this.diretorio + "/"+"diretorio."+nomeArquivo+".idx", 
                            this.diretorio+"/" + "cestos."+nomeArquivo+".idx");
 
@@ -56,7 +57,9 @@ public class CRUD {
     }
     public Usuario read(int id) throws Exception{
         long endereco=índiceDireto.read(id);
-        System.out.println("Endereço: "+endereco);
+
+        if(endereco<0) return null;
+
         arquivo.seek(endereco);
         char lapide=arquivo.readChar();
         if(lapide!=' ') throw new Exception("Erro! arquivo deletado");
