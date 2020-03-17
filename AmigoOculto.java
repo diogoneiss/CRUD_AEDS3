@@ -2,12 +2,17 @@
 import java.util.Scanner;
 
 public class AmigoOculto {
+
+    //o Scanner é atributo da classe pq todos os metodos usam ele.
   public static Scanner ler = new Scanner(System.in);
+
   public static void main(String args[]) {
-    System.out.println("Teste");
+    
     try {
+
       CRUD amigoOculto = new CRUD("amigos");
       int entrada;
+
       do {
         System.out.println("Amigo Oculto");
         System.out.println("================");
@@ -16,7 +21,9 @@ public class AmigoOculto {
         System.out.println("\n0) Sair");
         System.out.print("\nOpção: ");
         entrada = ler.nextInt();
+
         ler.nextLine();
+
         if (entrada == 1) {
           acesso(amigoOculto);
         } else if (entrada == 2) {
@@ -24,6 +31,7 @@ public class AmigoOculto {
         }
       } while (entrada != 0);
       ler.close();
+
     } catch (Exception e) {
       System.out.println("erro");
       e.printStackTrace();
@@ -32,22 +40,27 @@ public class AmigoOculto {
   public static void acesso(CRUD amigoOculto) throws Exception{
     System.out.println("\nACESSO AO SISTEMA");
     System.out.print("\nEmail: ");
+    
     String email = ler.nextLine();
+    
     if (amigoOculto.read(email) == null){
-      System.out.println("\nUsuário não cadastrado");
+      System.out.println("\nUsuário não cadastrado\n\n");
     }
     else{
-      System.out.print("Senha: ");
+      
+        System.out.print("Senha: ");
       String senha=ler.nextLine();
       Usuario temp=amigoOculto.read(email);
+      
       if(temp.getSenha().compareTo(senha)==0){
-        System.out.println("\nMenu não finalizado\n");
+        System.out.println("\nMenu não finalizado, porém a senha está correta\n");
         System.out.println("Pressione qualquer tecla para continuar");
         String a=ler.nextLine();
         if(a!=null){
           return;
         }
       }
+      
       else{
         System.out.println("\nSenha Incorreta");
         System.out.println("Pressione qualquer tecla para continuar");
@@ -58,6 +71,7 @@ public class AmigoOculto {
       }
     }
   }
+
   public static void novoUsuario(CRUD amigoOculto) throws Exception {
     System.out.println("\nNOVO USUÁRIO");
     System.out.print("\nEmail: ");
