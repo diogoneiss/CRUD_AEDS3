@@ -20,11 +20,12 @@ public class CRUD {
             arquivo.writeInt(0);  // cabeçalho do arquivo
 
         índiceDireto = new HashExtensivel( 10, 
-                           "dados/diretorio."+nomeArquivo+".idx", 
-                           "dados/cestos."+nomeArquivo+".idx");
+
+                    this.diretorio + "/"+"diretorio."+nomeArquivo+".idx", 
+                           this.diretorio+"/" + "cestos."+nomeArquivo+".idx");
 
         índiceIndireto = new ArvoreBMais_String_Int( 10,
-                           this.diretorio+"/arvoreB."+nomeArquivo+".idx");
+                           this.diretorio+"/"+ "arvoreB."+nomeArquivo+".idx");
     }
 
     /**
@@ -39,7 +40,7 @@ public class CRUD {
 
         arquivo.seek(0);
         int id = arquivo.readInt() + 1;// ler o ultimo id usado e somar um para obter o novo id
-
+    
         Usuario temp = new Usuario(id, nome, email, senha);
         long endereco = arquivo.length();
 
@@ -56,7 +57,9 @@ public class CRUD {
     }
     public Usuario read(int id) throws Exception{
         long endereco=índiceDireto.read(id);
+
         if(endereco<0) return null;
+
         arquivo.seek(endereco);
         char lapide=arquivo.readChar();
         if(lapide!=' ') throw new Exception("Erro! arquivo deletado");

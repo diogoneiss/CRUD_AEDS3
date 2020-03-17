@@ -5,7 +5,8 @@ public class Usuario {
     private String nome, email, senha;
 
     public Usuario(){
-
+        id = -1;
+        nome = email = senha = "";
     }
 
     /**

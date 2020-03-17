@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 public class AmigoOculto {
@@ -100,3 +101,4 @@ public class AmigoOculto {
     }
   }
 }
+
