@@ -1,2 +1,2 @@
 # CRUD_AEDS3
-Projeto de um CRUD de Amigo Oculto
+Projeto de um CRUD para um Amigo Oculto
