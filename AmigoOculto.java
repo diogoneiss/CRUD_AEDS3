@@ -10,7 +10,7 @@ public class AmigoOculto {
 		try {
 
 			CRUD<Usuario> usuariosAmigoOculto = new CRUD<>("amigos", Usuario.class.getConstructor());
-			int entrada;
+			int opcaoEscolhida;
 
 			do {
 				System.out.println("Amigo Oculto");
@@ -19,17 +19,17 @@ public class AmigoOculto {
 				System.out.println("2) Novo usuário");
 				System.out.println("\n0) Sair");
 				System.out.print("\nOpção: ");
-				entrada = ler.nextInt();
+				opcaoEscolhida = ler.nextInt();
 
 				//puxar o \n
 				ler.nextLine();
 
-				if (entrada == 1) {
+				if (opcaoEscolhida == 1) {
 					acesso(usuariosAmigoOculto);
-				} else if (entrada == 2) {
+				} else if (opcaoEscolhida == 2) {
 					novoUsuario(usuariosAmigoOculto);
 				}
-			} while (entrada != 0);
+			} while (opcaoEscolhida != 0);
 
 			//fim do programa
 			ler.close();
@@ -50,7 +50,8 @@ public class AmigoOculto {
 		String email = ler.nextLine();
 
 		if (amigoOculto.read(email) == null) {
-			System.out.println("\nUsuário não cadastrado\n\n");
+			System.out.println("\nUsuário não cadastrado\n");
+			System.out.println("Email passado para busca: " + email);
 		} else {
 
 			System.out.print("Senha: ");
