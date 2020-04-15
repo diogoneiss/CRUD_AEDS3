@@ -24,5 +24,6 @@ hs_err_pid*
 
 # arquivos criados
 /dados
+
 #arquivo de limpeza de pasta
 limpar.sh

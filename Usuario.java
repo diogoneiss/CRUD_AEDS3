@@ -1,10 +1,10 @@
 import java.io.*;
 
-public class Usuario {
+public class Usuario implements Entidade {
     private int id;
     private String nome, email, senha;
 
-    public Usuario(){
+    public Usuario() {
         id = -1;
         nome = email = senha = "";
     }
@@ -20,11 +20,24 @@ public class Usuario {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
-       
+
     }
 
     public Usuario(int id, String nome, String email, String senha) {
         this.setId(id);
+        this.setEmail(email);
+        this.setNome(nome);
+        this.setSenha(senha);
+    }
+
+    /**
+     * Método sem id, usado exclusivamente para criação de objs temporários
+     *
+     * @param nome
+     * @param email
+     * @param senha
+     */
+    public Usuario(String nome, String email, String senha) {
         this.setEmail(email);
         this.setNome(nome);
         this.setSenha(senha);
@@ -41,18 +54,15 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
-
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
     public int getId() {
         return this.id;
     }
     public String getEmail() {
         return this.email;
     }
-
     public String getNome() {
         return this.nome;
     }
