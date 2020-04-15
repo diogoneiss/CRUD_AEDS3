@@ -14,7 +14,7 @@ public class CRUD<T extends Entidade> {
     Constructor<T> construtor;
 
     public CRUD(String nomeArquivo, Constructor<T> construtor) throws Exception {
-
+        this.construtor=construtor;
         File d = new File(this.diretorio);
         if (!d.exists())
             d.mkdir();
@@ -42,6 +42,7 @@ public class CRUD<T extends Entidade> {
         int id = arquivo.readInt() + 1;// ler o ultimo id usado e somar um para obter o novo id
 
         long endereco = arquivo.length();
+        objetoCriado.setId(id);
 
         arquivo.seek(arquivo.length());// aponta o ponteiro para o fim do arquivo
 
@@ -62,17 +63,16 @@ public class CRUD<T extends Entidade> {
         if (endereco < 0) return null;
 
         arquivo.seek(endereco);
-        char lapide = arquivo.readChar();
+        char lapide = arquivo.readChar();;
         if (lapide != ' ')
             throw new Exception("Erro! arquivo deletado");
 
-        int tamanho = arquivo.readInt();
+        int tamanho = arquivo.readInt(); 
         byte[] byteUsuario = new byte[tamanho];
         arquivo.read(byteUsuario);
-
+        Usuario a=new Usuario(byteUsuario);
         //como se fosse um new T()
         T objeto = this.construtor.newInstance();
-
         objeto.fromByteArray(byteUsuario);
         return objeto;
     }
@@ -80,7 +80,6 @@ public class CRUD<T extends Entidade> {
     public T read(String chaveSec) throws Exception {
         //procurar o id com a string fornecida
         int id = índiceIndireto.read(chaveSec);
-
         return this.read(id);
     }
 
