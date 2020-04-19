@@ -11,12 +11,14 @@ public class CRUD<T extends Entidade> {
     public RandomAccessFile arquivo;
     public HashExtensivel índiceDireto;
     public ArvoreBMais_String_Int índiceIndireto;
+    public ArvoreBMais_Int_Int índiceIndiretoIntInt;
+
 
     //passar o construtor da classe genérica que será utilizada
     Constructor<T> construtor;
 
     public CRUD(String nomeArquivo, Constructor<T> construtor) throws Exception {
-        this.construtor=construtor;
+        this.construtor = construtor;
         File d = new File(this.diretorio);
         if (!d.exists())
             d.mkdir();
@@ -32,6 +34,11 @@ public class CRUD<T extends Entidade> {
 
         índiceIndireto = new ArvoreBMais_String_Int(10,
                 this.diretorio + "/" + "arvoreB." + nomeArquivo + ".idx");
+
+
+        índiceIndiretoIntInt = new ArvoreBMais_Int_Int(10,
+                this.diretorio + "/" + "arvoreBIntInt." + nomeArquivo + ".idx");
+
     }
 
     /**
@@ -55,10 +62,11 @@ public class CRUD<T extends Entidade> {
         arquivo.writeInt(id);// atualiza o id
         índiceDireto.create(id, endereco);
         índiceIndireto.create(objetoCriado.chaveSecundaria(), objetoCriado.getId());
+
         return id;
     }
 
-    // O problema está neste método.
+
     public T read(int id) throws Exception {
         long endereco = índiceDireto.read(id);
 
