@@ -73,14 +73,14 @@ public class CRUD<T extends Entidade> {
         if (endereco < 0) return null;
 
         arquivo.seek(endereco);
-        char lapide = arquivo.readChar();;
+        char lapide = arquivo.readChar();
         if (lapide != ' ')
             throw new Exception("Erro! arquivo deletado");
 
         int tamanho = arquivo.readInt(); 
         byte[] byteUsuario = new byte[tamanho];
         arquivo.read(byteUsuario);
-        Usuario a=new Usuario(byteUsuario);
+        //Usuario a=new Usuario(byteUsuario);
         //como se fosse um new T()
         T objeto = this.construtor.newInstance();
         objeto.fromByteArray(byteUsuario);

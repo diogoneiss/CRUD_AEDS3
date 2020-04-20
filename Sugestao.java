@@ -16,12 +16,13 @@ public class Sugestao implements Entidade {
 			this.fromByteArray(bytes);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+			System.out.println("Deu pau na hora de criar a sugestão pelo byte array");
 		}
 
 	}
 
 	public Sugestao(String produto, String loja, float valor, String observacoes, int idUsuario) {
-		idSugestao = idUsuario = -1;
+		idSugestao = -1;
 		setLoja(loja);
 		setProduto(produto);
 		setValor(valor);
