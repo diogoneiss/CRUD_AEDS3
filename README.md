@@ -16,7 +16,6 @@ Bugs?
 
 # Parte 5 - Grupos de amigos
 https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-5-grupos
-Henrique
 
 Bugs? 
 
@@ -27,8 +26,7 @@ https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-6-convites
 Bugs? 
 
 # Parte 7 - Inscrição
-
-https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-7-inscricao
 Lorenzo
+https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-7-inscricao
 
 Bugs?
