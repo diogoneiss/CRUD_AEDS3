@@ -24,7 +24,7 @@ public class AmigoOculto {
 				opcaoEscolhidaMenuLogin = menuLogin(usuariosAmigoOculto);
 
 				// VERIFICAÇÃO SE O USUÁRIO LOGOU
-				if (ControladorSingleton.idUsuarioAtual != -1) {
+				if (controladorPrograma.getIdUsuarioAtual() != -1) {
 					int opcaoMenuInicial;
 					do{
 						opcaoMenuInicial=menuInicial();
@@ -63,10 +63,9 @@ public class AmigoOculto {
 
 
 						//como saímos do menu logado não é necessário mais armazenar o id do usuario atual
-						ControladorSingleton.finalizarIdUsuarioAtual();
+						controladorPrograma.finalizarIdUsuarioAtual();
 					}while(opcaoMenuInicial!=0);
 				}
-
 
 				//despedir se o usuario quiser sair do programa.
 				if (opcaoEscolhidaMenuLogin == 0)
