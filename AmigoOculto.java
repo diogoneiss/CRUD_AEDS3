@@ -23,7 +23,7 @@ public class AmigoOculto {
 				opcaoEscolhidaMenuLogin = menuLogin(usuariosAmigoOculto);
 
 				// VERIFICAÇÃO SE O USUÁRIO LOGOU
-				if (ControladorSingleton.idUsuarioAtual != -1) {
+				if (controladorPrograma.getIdUsuarioAtual() != -1) {
 					int opcaoEscolhidaSugestoes;
 					do {
 
@@ -33,7 +33,7 @@ public class AmigoOculto {
 					} while (opcaoEscolhidaSugestoes != 0);
 
 					//como saímos do menu logado não é necessário mais armazenar o id do usuario atual
-					ControladorSingleton.finalizarIdUsuarioAtual();
+					controladorPrograma.finalizarIdUsuarioAtual();
 				}
 
 
@@ -115,7 +115,7 @@ public class AmigoOculto {
 			case 1: {
 				int idTemp = acesso(amigoOculto);
 				if (idTemp != -1) {
-					ControladorSingleton.salvarIdUsuarioAtual(idTemp);
+					controladorPrograma.salvarIdUsuarioAtual(idTemp);
 				}
 				break;
 			}
@@ -135,7 +135,7 @@ public class AmigoOculto {
 	// TODO: Resolver problema com a listagem e nulls.
 	public static void listarSugestoes(CRUD<Sugestao> amigoOculto) {
 		//terei que procurar todas as sugestoes e, se elas baterem com o id, listar
-		int idUser = ControladorSingleton.idUsuarioAtual;
+		int idUser = controladorPrograma.getIdUsuarioAtual();
 		try {
 			System.out.println("MINHAS SUGESTÕES");
 
@@ -210,7 +210,7 @@ public class AmigoOculto {
 		if (!MyIO.readLine().equals("1"))
 			return;
 
-		Sugestao temp = new Sugestao(produto, loja, preco, observacoes, ControladorSingleton.idUsuarioAtual);
+		Sugestao temp = new Sugestao(produto, loja, preco, observacoes, controladorPrograma.getIdUsuarioAtual());
 
 		try {
 			//efetivamente criar no banco
