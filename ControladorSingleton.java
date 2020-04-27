@@ -5,7 +5,7 @@
 public class ControladorSingleton {
 
 	private static ControladorSingleton controlador;
-	public static int idUsuarioAtual = -1;
+	private int idUsuarioAtual = -1;
 
 	private ControladorSingleton() {
 		//construtor privado, já que ela é iniciada estáticamente
@@ -17,13 +17,16 @@ public class ControladorSingleton {
 		}
 		return controlador;
 	}
+	public int getIdUsuarioAtual(){
+		return this.idUsuarioAtual;
+	}
 
-	public static void salvarIdUsuarioAtual(int id) {
+	public  void salvarIdUsuarioAtual(int id) {
 		idUsuarioAtual = id;
 	}
 
 	//Para evitar confusao ao finalizar as operacoes com um usuario deve-se resetar o id global
-	public static void finalizarIdUsuarioAtual() {
+	public  void finalizarIdUsuarioAtual() {
 		idUsuarioAtual = -1;
 	}
 
