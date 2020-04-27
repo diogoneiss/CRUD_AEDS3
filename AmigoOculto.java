@@ -42,9 +42,9 @@ public class AmigoOculto {
 							}
 							//grupos
 							case 2:{
-								int opcaoEscolhidaGrupos;
+								int opcaoEscolhidaGrupos = 0;
 								do{
-									opcaoEscolhidaGrupos=menuLogadoGrupos(gruposAmigoOculto);
+									//opcaoEscolhidaGrupos = menuLogadoGrupos(gruposAmigoOculto);
 								}while(opcaoEscolhidaGrupos!=0);
 								break;
 							}
@@ -413,17 +413,17 @@ public class AmigoOculto {
 				}
 				//convites
 				case 2: {
-					
+
 					break;
 				}
 				//participantes
 				case 3: {
-					
+
 					break;
 				}
 				//sorteio
 				case 4: {
-					
+
 					break;
 				}
 				//saída
@@ -453,7 +453,7 @@ public class AmigoOculto {
 				}
 				//Participação nos grupos
 				case 2: {
-					
+
 					break;
 				}
 				//saída
@@ -471,6 +471,7 @@ public class AmigoOculto {
 		}
 		return opcao;
 	}
+
 	public static int menuLogado(CRUD<Sugestao> amigoOculto) {
 		int opcaoEscolhidaSugestoes = 0;
 		try {
@@ -567,7 +568,7 @@ public class AmigoOculto {
 			System.out.println();
 
 			//loop que vai procurar os n elementos retornados dentro do banco e printar os valores
-			for (int i = 0; i < idsSugestoes.length; i++, contador++) {
+			for (int i = 1; i <= idsSugestoes.length; i++, contador++) {
 				Sugestao temp = amigoOculto.read(i);
 
 				if (temp != null) {
