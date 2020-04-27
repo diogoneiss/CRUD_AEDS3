@@ -1,6 +1,6 @@
 import java.io.IOException;
 import java.util.InputMismatchException;
-
+import java.util.Calendar;
 
 public class AmigoOculto {
 
@@ -89,19 +89,371 @@ public class AmigoOculto {
 		int opcaoEscolhida=controladorPrograma.escolherOpcaoMenuInicial();
 		return opcaoEscolhida;
 	}
-	public static int menuLogadoGrupos(CRUD<Grupos> amigoOculto) {
+	public static void criarGrupo(CRUD<Grupos> amigoOculto)throws Exception{
+		MyIO.println("Digite o nome do grupo: ");
+		String nome=MyIO.readLine();
+		if(nome.compareTo("")==0 || nome.compareTo(" ")==0){
+			MyIO.println("Nome invalido, retornando ao menu de gerenciamento de grupos");
+		}
+		else{
+			boolean valido=false;
+			long dataSorteio=0;
+			while(valido==false){
+				int dia, mes, ano, hora;
+				Calendar atual = Calendar.getInstance();
+				Calendar novo= Calendar.getInstance();
+				do{
+					MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
+					String temp=MyIO.readLine();
+					String[] aux=temp.split(" ");
+					ano=Integer.parseInt(aux[0]);
+					mes=Integer.parseInt(aux[1]);
+					dia=Integer.parseInt(aux[2]);
+					hora=Integer.parseInt(aux[3]);
+					if((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23)){
+						MyIO.println("Data invalida!!!");
+					}
+				}while((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23));
+				novo.set(ano,mes,dia,hora,0);
+				if(novo.compareTo(atual)>0){
+					valido=true;
+					dataSorteio=novo.getTimeInMillis();
+				}
+				else{
+					MyIO.println("Data antes da atual, invalida!");
+				}
+			}
+			float valor;
+			do{
+				MyIO.println("Informe o valor médio do presente: ");
+				valor=MyIO.readFloat();
+			}while(valor<0);
+			long dataEncontro=0;
+			valido=false;
+			while(valido==false){
+				int dia, mes, ano, hora;
+				Calendar sorteio = Calendar.getInstance();
+				sorteio.setTimeInMillis(dataSorteio);
+				Calendar novo= Calendar.getInstance();
+				do{
+					MyIO.println("Digite o ano, o mes, o dia e a hora do encontro respectivamente seperados um espaço(ex: ano mes dia hora) : ");
+					String temp=MyIO.readLine();
+					String[] aux=temp.split(" ");
+					ano=Integer.parseInt(aux[0]);
+					mes=Integer.parseInt(aux[1]);
+					dia=Integer.parseInt(aux[2]);
+					hora=Integer.parseInt(aux[3]);
+					if((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23)){
+						MyIO.println("Data invalida!!!");
+					}
+				}while((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23));
+				novo.set(ano,mes,dia,hora,0);
+				if(novo.compareTo(sorteio)>0){
+					valido=true;
+					dataEncontro=novo.getTimeInMillis();
+				}
+				else{
+					MyIO.println("Data antes do sorteio, invalida!");
+				}
+			}
+			String local;
+			do{
+				MyIO.println("Digite o local do encontro: ");
+				local=MyIO.readLine();
+			}while(local=="");
+			String observacoes;
+			MyIO.println("Digite obserções adcionais: ");
+			observacoes=MyIO.readLine();
+			MyIO.println("Digite 1 se deseja confirmar a inscrição: ");
+			int confirmar=MyIO.readInt();
+			if(confirmar==1){
+				int id=-1;
+				Grupos temp=new Grupos(-1,controladorPrograma.getIdUsuarioAtual(),nome,local,observacoes,dataSorteio,dataEncontro,valor,false,true);
+				try{
+					id = amigoOculto.create(temp);
+
+				}catch(Exception e ){
+					MyIO.println("Erro");
+				}
+				amigoOculto.índiceIndiretoIntInt.create(controladorPrograma.getIdUsuarioAtual(),id);
+			}
+		}
+	}
+	public static void listarGrupos(CRUD<Grupos> amigoOculto) throws Exception{
+		int[] idsGrupos=amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+		for(int i=0;i<idsGrupos.length;i++){
+			Grupos temp=amigoOculto.read(idsGrupos[i]);
+			if(temp.getAtivo()){
+				MyIO.println(i+". "+temp.getNome());
+			}
+		}
+		pressioneTeclaParaContinuar();
+	}
+	public static void alterarGrupos(CRUD<Grupos> amigoOculto) throws Exception{
+		int[] idsGrupos=amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+		for(int i=0;i<idsGrupos.length;i++){
+			Grupos temp=amigoOculto.read(idsGrupos[i]);
+			if(temp.getAtivo()){
+				MyIO.print(i+". ");
+				temp.mostrar();
+			}
+		}
+		int alteracoes=0;
+		MyIO.println("Digite o numero do grupo que deseja alterar ou 0 para sair: ");
+		int alterar=MyIO.readInt();
+		if(alterar>=0){
+			if(alterar<idsGrupos.length){
+				Grupos temp=amigoOculto.read(idsGrupos[alterar]);
+				temp.mostrar();
+				MyIO.println("Digite o novo nome: ");
+				String nome=MyIO.readLine();
+				if(nome.compareTo("")==0){
+					nome=temp.getNome();
+				}
+				else {
+					alteracoes++;
+				}
+				boolean valido=false;
+				long dataSorteio=0;
+				while(valido==false){
+					int dia,mes,ano,hora;
+					dia= mes= ano= hora=0;
+					Calendar atual = Calendar.getInstance();
+					Calendar novo= Calendar.getInstance();
+					MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
+					String data=MyIO.readLine();
+					if(data.compareTo("")==0){
+						valido=true;
+						dataSorteio=temp.getMomentoSorteio();
+					}
+					else{
+						do{
+							alteracoes++;
+							String[] aux=data.split(" ");
+							ano=Integer.parseInt(aux[0]);
+							mes=Integer.parseInt(aux[1]);
+							dia=Integer.parseInt(aux[2]);
+							hora=Integer.parseInt(aux[3]);
+							if((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23)){
+								MyIO.println("Data invalida!!!");
+								MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
+								data=MyIO.readLine();
+							}
+						}while((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23));
+						novo.set(ano,mes,dia,hora,0);
+						if(novo.compareTo(atual)>0){
+							valido=true;
+							dataSorteio=novo.getTimeInMillis();
+						}
+						else{
+							MyIO.println("Data antes da atual, invalida!");
+						}
+					}
+				}
+				MyIO.println("Digite o valor medio dos presentes: ");
+				String s=MyIO.readString();
+				float valor;
+				if(s.compareTo("")==0){
+					valor=temp.getValor();
+				}
+				else{
+					alteracoes++;
+					valor=Float.parseFloat(s);
+				}
+				valido=false;
+				long dataEncontro=0;
+				while(valido==false){
+					int dia,mes,ano,hora;
+					dia= mes= ano= hora=0;
+					Calendar atual = Calendar.getInstance();
+					Calendar novo= Calendar.getInstance();
+					MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
+					String data=MyIO.readLine();
+					if(data.compareTo("")==0){
+						valido=true;
+						dataEncontro=temp.getMomentoSorteio();
+					}
+					else{
+						do{
+							alteracoes++;
+							String[] aux=data.split(" ");
+							ano=Integer.parseInt(aux[0]);
+							mes=Integer.parseInt(aux[1]);
+							dia=Integer.parseInt(aux[2]);
+							hora=Integer.parseInt(aux[3]);
+							if((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23)){
+								MyIO.println("Data invalida!!!");
+								MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
+								data=MyIO.readLine();
+							}
+						}while((ano<2020) || (mes<0 || mes>12) || (dia<0 || dia>31) || (hora<0 || hora>23));
+						novo.set(ano,mes,dia,hora,0);
+						if(novo.compareTo(atual)>0){
+							valido=true;
+							dataEncontro=novo.getTimeInMillis();
+						}
+						else{
+							MyIO.println("Data antes da atual, invalida!");
+						}
+					}
+				}
+				MyIO.println("Digite o local de encontro: ");
+				String local=MyIO.readLine();
+				if(local.compareTo("")==0){
+					local=temp.getLocalEncontro();
+				}
+				else {
+					alteracoes++;
+				}
+				MyIO.println("Digite observações adcionais");
+				String observacoes=MyIO.readLine();
+				if(observacoes.compareTo("")==0){
+					observacoes=temp.getObservacoes();
+				}
+				else {
+					alteracoes++;
+				}
+				if(alteracoes==0){
+					MyIO.println("Nenhuma alteração foi feita");
+				}
+				else{
+					MyIO.println("Digite 1 se realmente deseja alterar o grupo: ");
+					int escolha =MyIO.readInt();
+					if(escolha==1){
+						Grupos novo=new Grupos(temp.getId(),controladorPrograma.getIdUsuarioAtual(),nome,local,observacoes,dataSorteio,dataEncontro,valor,false,true);
+						amigoOculto.update(novo);
+						MyIO.println("Usuário alterado com sucesso!");
+					}
+					else {
+						MyIO.println("Nenhuma alteração foi feita");
+					}
+				}
+			}
+			else{
+				MyIO.println("Número invalido");
+			}
+		}
+	}
+	public static void desativarGrupo(CRUD<Grupos> amigoOculto) throws Exception{
+		int[] idsGrupos=amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+		for(int i=0;i<idsGrupos.length;i++){
+			Grupos temp=amigoOculto.read(idsGrupos[i]);
+			if(temp.getAtivo()){
+				MyIO.print(i+". ");
+				temp.mostrar();
+			}
+		}
+		MyIO.println("Digite o numero do grupo que deseja desativar");
+		int i=MyIO.readInt();
+		if(i>=0 && i<idsGrupos.length){
+			Grupos desativar=amigoOculto.read(idsGrupos[i]);
+			desativar.mostrar();
+			MyIO.println("Digite 1 se deseja confirmar a desativação: ");
+			int escolha=MyIO.readInt();
+			if(escolha==1){
+				desativar.setAtivo(false);
+				amigoOculto.update(desativar);
+				MyIO.println("Desativação efetuada com sucesso");
+			}
+		}
+	}
+	public static int escolherOpcaoGrupos(CRUD<Grupos> amigoOculto) throws Exception{
 		int opcao = 0;
+		try {
+			opcao = controladorPrograma.escolherOpcaoGrupos();
+			switch (opcao) {
+				//listar
+				case 1: {
+					listarGrupos(amigoOculto);
+					break;
+				}
+				//incluir
+				case 2: {
+					criarGrupo(amigoOculto);
+					break;
+				}
+				//alterar
+				case 3: {
+					alterarGrupos(amigoOculto);
+					break;
+				}
+				//desativar
+				case 4: {
+					desativarGrupo(amigoOculto);
+					break;
+				}
+				//saída
+				case 0: {
+					return 0;
+				}
+				default: {
+					System.out.println("Opção inválida inserida, retornando..");
+				}
+
+			}
+
+		} catch (InputMismatchException erroInput) {
+			System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
+			opcao = 0;
+		}
+		return opcao;
+	}
+	public static int gerenciamentoGrupos(CRUD<Grupos> amigoOculto)throws Exception{
+		int opcao;
+		try {
+			opcao = controladorPrograma.gerenciamentoGrupos();
+			switch (opcao) {
+				//gerenciamento de grupos
+				case 1: {
+					int opcaoGrupos;
+					do{
+						opcaoGrupos=escolherOpcaoGrupos(amigoOculto);
+					}while(opcaoGrupos!=0);
+					break;
+				}
+				//convites
+				case 2: {
+					
+					break;
+				}
+				//participantes
+				case 3: {
+					
+					break;
+				}
+				//sorteio
+				case 4: {
+					
+					break;
+				}
+				//saída
+				case 0: {
+					System.out.println("Retornando..");
+					return 0;
+				}
+				default: {
+					System.out.println("Opção inválida inserida, retornando..");
+				}
+			}
+		} catch (InputMismatchException erroInput) {
+			System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
+			opcao = 0;
+		}
+		return opcao;
+	}
+	public static int menuLogadoGrupos(CRUD<Grupos> amigoOculto) throws Exception{
+		int opcao;
 		try {
 			opcao = controladorPrograma.Grupos();
 			switch (opcao) {
 				//Criação e gerenciamento de grupos
 				case 1: {
-
+					gerenciamentoGrupos(amigoOculto);
 					break;
 				}
 				//Participação nos grupos
 				case 2: {
-
+					
 					break;
 				}
 				//saída
