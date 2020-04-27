@@ -89,6 +89,10 @@ public class AmigoOculto {
 		int opcaoEscolhida=controladorPrograma.escolherOpcaoMenuInicial();
 		return opcaoEscolhida;
 	}
+
+	// ============== MÉTODOS DE GRUPO =================================================================================
+
+
 	public static void criarGrupo(CRUD<Grupos> amigoOculto)throws Exception{
 		MyIO.println("Digite o nome do grupo: ");
 		String nome=MyIO.readLine();
@@ -472,6 +476,11 @@ public class AmigoOculto {
 		return opcao;
 	}
 
+
+	
+	// ============== MÉTODOS DE SUGESTÕES =================================================================================
+
+
 	public static int menuLogado(CRUD<Sugestao> amigoOculto) {
 		int opcaoEscolhidaSugestoes = 0;
 		try {
@@ -516,36 +525,6 @@ public class AmigoOculto {
 		}
 
 		return opcaoEscolhidaSugestoes;
-	}
-
-	/**
-	 * Métódo que contêm o menu de login, com opções de criar ou fazer login
-	 *
-	 * @param amigoOculto banco de dados dos usuarios
-	 * @return opção escolhida no menu
-	 * @throws Exception por problemas nos metodos do crud
-	 */
-	public static int menuLogin(CRUD<Usuario> amigoOculto) throws Exception {
-		int opcaoEscolhida = controladorPrograma.escolherOpcaoUsuarios();
-		switch (opcaoEscolhida) {
-			case 1: {
-				int idTemp = acesso(amigoOculto);
-				if (idTemp != -1) {
-					controladorPrograma.salvarIdUsuarioAtual(idTemp);
-				}
-				break;
-			}
-			case 2: {
-				novoUsuario(amigoOculto);
-				break;
-			}
-			case 0: {
-				break;
-			}
-			default:
-				System.out.println("Opção inválida.. retornando ao menu principal");
-		}
-		return opcaoEscolhida;
 	}
 
 	// TODO: Resolver problema com a listagem e nulls.
@@ -654,6 +633,39 @@ public class AmigoOculto {
 
 	public static void excluirSugestoes(CRUD<Sugestao> amigoOculto) {
 
+	}
+
+	
+	// ============== MÉTODOS DE USUÁRIO =================================================================================
+
+	/**
+	 * Métódo que contêm o menu de login, com opções de criar ou fazer login
+	 *
+	 * @param amigoOculto banco de dados dos usuarios
+	 * @return opção escolhida no menu
+	 * @throws Exception por problemas nos metodos do crud
+	 */
+	public static int menuLogin(CRUD<Usuario> amigoOculto) throws Exception {
+		int opcaoEscolhida = controladorPrograma.escolherOpcaoUsuarios();
+		switch (opcaoEscolhida) {
+			case 1: {
+				int idTemp = acesso(amigoOculto);
+				if (idTemp != -1) {
+					controladorPrograma.salvarIdUsuarioAtual(idTemp);
+				}
+				break;
+			}
+			case 2: {
+				novoUsuario(amigoOculto);
+				break;
+			}
+			case 0: {
+				break;
+			}
+			default:
+				System.out.println("Opção inválida.. retornando ao menu principal");
+		}
+		return opcaoEscolhida;
 	}
 
 	/**
