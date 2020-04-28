@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class Sugestao implements Entidade {
+public class Sugestao implements Entidade, Cloneable {
 	private int idUsuario, idSugestao;
 	private String produto, loja, observacoes;
 	private float valor;
@@ -28,6 +28,9 @@ public class Sugestao implements Entidade {
 		setValor(valor);
 		setObservacoes(observacoes);
 		setIdUsuario(idUsuario);
+	}
+	public Sugestao clone() throws CloneNotSupportedException {
+		return (Sugestao) super.clone();
 	}
 
 
@@ -109,5 +112,18 @@ public class Sugestao implements Entidade {
 		this.setLoja(entrada.readUTF());
 		this.setObservacoes(entrada.readUTF());
 		this.setValor(entrada.readFloat());
+	}
+
+	@Override
+	public String toString(){
+		
+		String concatenated = String.format(
+			"%s\n%s\nR$ %.2f\n%s\n",
+			/*1*/this.getProduto() ,
+			/*2*/this.getLoja(),
+			/*3*/this.getValor(),
+			/*4*/this.getObservacoes()
+		);
+		return concatenated;
 	}
 }

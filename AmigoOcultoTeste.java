@@ -18,24 +18,48 @@ public class AmigoOcultoTeste {
             int opcaoEscolhidaMenuLogin = 0;
 
 
-            //criar objetos preenchidos, pra nao precisar de menu de criação.
-            Usuario preencher1 = new Usuario("Diogo", "diogo.oliveiran@gmail.com", "1234");
-            Usuario preencher2 = new Usuario("Lorenzo", "lorenzo@hotmail.com", "4321");
+            if(usuariosAmigoOculto.read(2) == null){
 
-            int id1 = usuariosAmigoOculto.create(preencher1);
-            preencher1.setId(id1);
+                //criar objetos preenchidos, pra nao precisar de menu de criação.
+                Usuario preencher1 = new Usuario("Diogo", "diogo.oliveiran@gmail.com", "1234");
+                Usuario preencher2 = new Usuario("Lorenzo", "lorenzo@hotmail.com", "4321");
 
-            int id2 = usuariosAmigoOculto.create(preencher2);
-            preencher1.setId(id2);
+                int id1 = usuariosAmigoOculto.create(preencher1);
+                preencher1.setId(id1);
+
+                int id2 = usuariosAmigoOculto.create(preencher2);
+                preencher1.setId(id2);
 
 
-            //considera id2 como o usuário atual. Para pegar a id do usuario atual,
-            // basta fazer controlador programa . getIdUsuarioAtual()
-            controladorPrograma.salvarIdUsuarioAtual(id2);
+                //considera id2 como o usuário atual. Para pegar a id do usuario atual,
+                // basta fazer controlador programa . getIdUsuarioAtual()
+                controladorPrograma.salvarIdUsuarioAtual(id2);
+
+            }
+            else
+                controladorPrograma.salvarIdUsuarioAtual(2);
+
 
             //Menu da classe, coloque as opções num switch / if elses aqui e depois passe pra uma função
             do {
+               opcaoEscolhidaMenuLogin = controladorPrograma.escolherOpcaoSugestao();
 
+               switch (opcaoEscolhidaMenuLogin) {
+                   case 1:
+                       AmigoOculto.listarSugestoes(sugestaoAmigoOculto);
+                       break;
+               
+                    case 2:
+                       AmigoOculto.incluirSugestoes(sugestaoAmigoOculto);
+                       break;
+                       
+                    case 3:
+                       AmigoOculto.alterarSugestoes(sugestaoAmigoOculto);
+                       break;
+
+                   default:
+                       break;
+               }
 
             } while (opcaoEscolhidaMenuLogin != 0);
 

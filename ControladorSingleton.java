@@ -136,6 +136,32 @@ public class ControladorSingleton {
 		return MyIO.readInt();
 	}
 
+	public void menuSugestoesAlteracao() {
+
+
+		System.out.println("Amigo Oculto 1.0");
+		System.out.println("================\n");
+		System.out.println("INÍCIO > SUGESTÕES > ALTERAÇÃO\n");
+		System.out.println("\nPrintando na tela as sugestões registradas ao seu usuário.\n");
+
+
+	}
+
+	public int escolherOpcaoAlteracaoSugestao() {
+
+
+		System.out.println("Amigo Oculto 1.0");
+		System.out.println("================\n");
+		System.out.println("INÍCIO > SUGESTÕES > ALTERAÇÃO\n");
+
+		System.out.println("Escolha qual opção na lista acima você deseja alterar ou\ndigite [0] para não alterar nada e retornar");
+
+		System.out.print("\nOpção: ");
+
+		return MyIO.readInt();
+	}
+	
+
 	public int escolherOpcaoUsuarios() {
 
 

@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class AmigoOculto {
 
@@ -8,6 +9,8 @@ public class AmigoOculto {
 	private static final ControladorSingleton controladorPrograma = ControladorSingleton.getInstance();
 
 	public static void main(String[] args) {
+
+		MyIO.setCharset("UTF-8");
 
 		try {
 
@@ -538,26 +541,14 @@ public class AmigoOculto {
 			int[] idsSugestoes = amigoOculto.índiceIndiretoIntInt.read(idUser);
 			int contador = 0;
 
-			System.out.println("Tamanho do array de ids encontradas: " + idsSugestoes.length);
-
-			System.out.print("ID das sugestões: ");
-			for (int j = 0; j < idsSugestoes.length; j++) {
-				System.out.print(j + "\t");
-			}
-			System.out.println();
-
 			//loop que vai procurar os n elementos retornados dentro do banco e printar os valores
 			for (int i = 1; i <= idsSugestoes.length; i++, contador++) {
 				Sugestao temp = amigoOculto.read(i);
 
 				if (temp != null) {
-					System.out.println(i + ". " + temp.getProduto());
-					System.out.println(temp.getLoja());
-					System.out.printf("R$ %.2f\n", temp.getValor());
-					System.out.println(temp.getObservacoes());
-				} else {
-					System.out.println("Temp é null para i = " + i);
-					contador--;
+					//chamada do metodo toString da sugestão
+					System.out.println(i + ". "+ temp);
+					
 				}
 
 			}
@@ -566,6 +557,7 @@ public class AmigoOculto {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		pressioneTeclaParaContinuar();
 
 	}
 
@@ -612,9 +604,6 @@ public class AmigoOculto {
 			int idSug = amigoOculto.create(temp);
 			temp.setId(idSug);
 
-			Sugestao temp2 = amigoOculto.read(idSug);
-
-			//System.out.printf("Produto do temp1: %s\nproduto do temp2: %s\n", temp.getProduto(), temp2.getProduto());
 
 			//adicionar a arvore B int int
 			amigoOculto.índiceIndiretoIntInt.create(temp.getIdUsuario(), temp.getId());
@@ -627,11 +616,244 @@ public class AmigoOculto {
 
 	}
 
-	public static void alterarSugestoes(CRUD<Sugestao> amigoOculto) {
+	/**
+	 * Mesmo método que o anterior, só que apenas para uso interno do código.
+	 * @param amigoOculto banco de dados de sugestoes
+	 * @param jaCriada objeto sugestao pronto para ser inserido.
+	 */
+	private static void incluirSugestoes(CRUD<Sugestao> amigoOculto, Sugestao jaCriada) {
+
+
+		try {
+			//efetivamente criar no banco
+			int idSug = amigoOculto.create(jaCriada);
+			jaCriada.setId(idSug);
+
+			//adicionar a arvore B int int
+			amigoOculto.índiceIndiretoIntInt.create(jaCriada.getIdUsuario(), jaCriada.getId());
+			System.out.printf("Acabei de adicionar a sugestão de [%s], com idSug [%d] e idUser [%d] na árvore..\n", jaCriada.getProduto(), jaCriada.getId(), jaCriada.getIdUsuario());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
-	public static void excluirSugestoes(CRUD<Sugestao> amigoOculto) {
+	public static void alterarSugestoes(CRUD<Sugestao> amigoOculto) {
+
+		// menu com o displayzinho
+		controladorPrograma.menuSugestoesAlteracao();
+
+
+		//mapeamento de inteiros para sugestões
+		HashMap<Integer, Sugestao> mapaSugestoes = new HashMap<>();
+
+		int idUser = controladorPrograma.getIdUsuarioAtual();
+
+		//metodo retorna um int[] com todas os ids batendo a c1, que é o id do user atual
+		int[] idsSugestoes = new int[0];
+		try {
+			idsSugestoes = amigoOculto.índiceIndiretoIntInt.read(idUser);
+
+			int numeroMascarado = 1;
+
+			//adicionar no hashmap e em seguida listar
+			for(int i = 0; i < idsSugestoes.length; i++, numeroMascarado++){
+				Sugestao temp = amigoOculto.read(idsSugestoes[i]);
+				mapaSugestoes.put(numeroMascarado, temp);
+				MyIO.print("Sugestão "+numeroMascarado+": "+temp);
+			}
+
+			//pronto, todos os dados estão no hashmap. Basta perguntar ao usuario qual sugestão ele deseja alterar
+
+			int opcao = controladorPrograma.escolherOpcaoAlteracaoSugestao();
+
+			//saida
+			if (opcao == 0){
+				MyIO.println("Ok, retornando.");
+			}
+
+			//vendo se a opção está no dominio de opceos validas
+			else if(opcao <= idsSugestoes.length){
+				Sugestao escolhida = mapaSugestoes.get(opcao);
+
+				Sugestao retiradaDoCrud = amigoOculto.read(escolhida.getId());
+
+				if(escolhida == retiradaDoCrud){
+					MyIO.println("Elas são a mesma referência, nao precisa fazer o read, Diogo.");
+				}
+
+				// pedir ao usuario as alterações e, se necessário, inserí-las num outro objeto.
+				// caso ele não queira alterar, será retornada um clone do objeto passado por referência.
+				Sugestao inserir = alterarSugestaoEspecifica(retiradaDoCrud);
+
+				excluirSugestoes(amigoOculto, retiradaDoCrud.getId());
+
+				//incluir no indice e crud
+				incluirSugestoes(amigoOculto, inserir);
+			}
+			//numero digitado muito alto
+			else{
+				throw new Exception("número da opção inválido");
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
+
+	}
+	public static Sugestao alterarSugestaoEspecifica(Sugestao antiga) {
+
+		Sugestao nova = new Sugestao();
+		String entrada = "";
+
+		Boolean alterado = false;
+
+		System.out.println("Altere agora as opções. Para manter do jeito que está, basta não escrever nada.");
+
+
+		// Produto
+
+		MyIO.print("Produto atual: "+antiga.getProduto()+ "Novo nome do produto: ");
+
+		entrada = MyIO.readLine();
+
+		if(entrada.equals("") || entrada.equals(" ") || entrada.equals("\n")){
+			//não alterado, seta o nome antigo
+			nova.setProduto(antiga.getProduto());
+		}
+		else{
+			nova.setProduto(entrada);
+			alterado = true;
+		}
+
+		// Loja
+
+		MyIO.print("Loja atual: "+antiga.getLoja()+ "Novo nome da loja: ");
+
+		entrada = MyIO.readLine();
+
+		if(entrada.equals("") || entrada.equals(" ") || entrada.equals("\n")){
+			//não alterado, seta o nome antigo
+			nova.setLoja(antiga.getLoja());
+		}
+		else{
+			nova.setLoja(entrada);
+			alterado = true;
+		}
+
+		// Preço
+
+		MyIO.print("Preço atual: "+antiga.getValor()+ "Novo valor: ");
+
+		float novoValor = MyIO.readFloat();
+
+		if (novoValor == 0){
+			//não alterado, seta o nome antigo
+			nova.setValor(antiga.getValor());
+		}
+		else{
+			nova.setValor(novoValor);
+			alterado = true;
+		}
+
+		// Observações
+
+		MyIO.print("Observação atual atual: "+antiga.getLoja()+ "\nNova observação: ");
+
+		entrada = MyIO.readLine();
+
+		if(entrada.equals("") || entrada.equals(" ") || entrada.equals("\n")){
+			//não alterado, seta o nome antigo
+			nova.setObservacoes(antiga.getObservacoes());
+		}
+		else{
+			nova.setObservacoes(entrada);
+			alterado = true;
+		}
+
+		if(alterado){
+			MyIO.print("Digite [0] para confirmar a alteração. Caso contrário voltaremos ao menu anterior, sem nenhuma alteração feita.\n Opção: ");
+
+			//usuário não quis confirmar a alteração
+			if(MyIO.readInt() != 0){
+				//clonado a antiga, já que vou apagá-la
+				try {
+					nova = antiga.clone();
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+				nova.setId(-1);
+			}
+		}
+
+		return nova;
+	}
+
+	public static void excluirSugestoes(CRUD<Sugestao> amigoOculto, Sugestao removida) {
+
+		try {
+
+			amigoOculto.delete(removida.getId());
+			amigoOculto.índiceIndiretoIntInt.delete(removida.getIdUsuario(), removida.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void excluirSugestoes(CRUD<Sugestao> amigoOculto, int id) {
+
+		//terei que procurar todas as sugestoes e, se elas baterem com o id, listar
+		int idUser = controladorPrograma.getIdUsuarioAtual();
+		try {
+			System.out.println("Exclusão de sugestões.\nListaremos abaixo suas sugestões");
+
+			//metodo retorna um int[] com todas os ids batendo a c1
+			int[] idsSugestoes = amigoOculto.índiceIndiretoIntInt.read(idUser);
+			int contador = 0;
+
+			//loop que vai procurar os n elementos retornados dentro do banco e printar os valores
+			for (int i = 1; i <= idsSugestoes.length; i++, contador++) {
+				Sugestao temp = amigoOculto.read(i);
+
+				if (temp != null) {
+					//chamada do metodo toString da sugestão
+					System.out.println(i + ". " + temp);
+
+				}
+			}
+			MyIO.print("Digite o número da sugestão que quer excluir ou [0] para cancelar: ");
+			int excluir = MyIO.readInt();
+
+			if(excluir == 0){
+				// nao faz nada
+				MyIO.println("Ok, remoção cancelada. Retornando");
+			}
+			else if( excluir > 0 && excluir <= idsSugestoes.length){
+				//excluir de fato
+				MyIO.print("Para confirmar  exclusão, digite [0]. Se não, não faremos nada. Opção: ");
+				int confirmacao = MyIO.readInt();
+				//chamada do método privado de exclusao
+
+				if (confirmacao == 0){
+					excluirSugestoes(amigoOculto, amigoOculto.read(excluir));
+				}
+				else
+					MyIO.println("Ok, remoção cancelada. Retornando");
+			}
+			else
+				throw new Exception("Entrada fora de domínio.");
+
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
