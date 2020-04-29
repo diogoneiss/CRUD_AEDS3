@@ -40,6 +40,8 @@ public class CRUD<T extends Entidade> {
         índiceIndiretoIntInt = new ArvoreBMais_Int_Int(10,
                 this.diretorio + "/" + "arvoreBIntInt." + nomeArquivo + ".idx");
 
+        indiceInvertido = new ArvoreBMais_ChaveComposta_String_Int(10,
+                this.diretorio + "/" +"arvoreBMaisChaveCompostaStringIny."+nomeArquivo+".idx");
     }
 
     /**

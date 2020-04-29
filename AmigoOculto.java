@@ -359,7 +359,7 @@ public class AmigoOculto {
                     dia = Integer.parseInt(aux[2]);
                     hora = Integer.parseInt(aux[3]);
                     if ((ano < 2020) || (mes < 0 || mes > 12) || (dia < 0 || dia > 31) || (hora < 0 || hora > 23)) {
-                        MyIO.println("Data invalida!!!");
+                        MyIO.println("Data invalida!!! Atente-se ao formato");
                     }
                 } while ((ano < 2020) || (mes < 0 || mes > 12) || (dia < 0 || dia > 31) || (hora < 0 || hora > 23));
                 novo.set(ano, mes, dia, hora, 0);
@@ -399,7 +399,7 @@ public class AmigoOculto {
                     valido = true;
                     dataEncontro = novo.getTimeInMillis();
                 } else {
-                    MyIO.println("Data antes do sorteio, invalida!");
+                    MyIO.println("Data antes do sorteio, invalida! O encontro tem que ser feito depois do sorteio..");
                 }
             }
             String local;
@@ -408,7 +408,7 @@ public class AmigoOculto {
                 local = MyIO.readLine();
             } while (local == "");
             String observacoes;
-            MyIO.println("Digite obserções adcionais: ");
+            MyIO.println("Digite observações adicionais: ");
             observacoes = MyIO.readLine();
             MyIO.println("Digite 1 se deseja confirmar a inscrição: ");
             int confirmar = MyIO.readInt();
@@ -535,7 +535,7 @@ public class AmigoOculto {
                             valido = true;
                             dataEncontro = novo.getTimeInMillis();
                         } else {
-                            MyIO.println("Data antes da atual, invalida!");
+                            MyIO.println("Data antes da atual, invalida! O encontro deve ser feito após o sorteio..");
                         }
                     }
                 }
