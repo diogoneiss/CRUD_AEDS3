@@ -30,7 +30,7 @@ public class ControladorSingleton {
 		idUsuarioAtual = -1;
 	}
 
-	public int escolherOpcaoMenuInicial() {
+	public int escolherOpcaoMenuInicial(Usuario userLogado) {
 
 		System.out.println("Amigo Oculto 1.0");
 		System.out.println("================\n");
@@ -39,7 +39,11 @@ public class ControladorSingleton {
 		System.out.println("1) Sugestões de presentes");
 		System.out.println("2) Grupos");
 		System.out.println("3) Usuários");
-		System.out.println("Novos convites: 0");
+		try {
+			System.out.println("Novos convites: "+ Inscricao.getTotalConvites(userLogado));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("\n0) Sair");
 		System.out.print("\nOpção: ");

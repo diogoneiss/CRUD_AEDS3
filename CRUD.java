@@ -12,6 +12,7 @@ public class CRUD<T extends Entidade> {
     public HashExtensivel índiceDireto;
     public ArvoreBMais_String_Int índiceIndireto;
     public ArvoreBMais_Int_Int índiceIndiretoIntInt;
+    public ArvoreBMais_ChaveComposta_String_Int indiceInvertido;
 
 
     //passar o construtor da classe genérica que será utilizada

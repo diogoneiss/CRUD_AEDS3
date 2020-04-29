@@ -15,19 +15,20 @@
  */
 
 class Inscricao {
-    private ArvoreBMais_ChaveComposta_String_Int indiceInvertido;
-    private CRUD<Convites> convites;
-    private CRUD<Grupos> grupos;
-    private CRUD<Usuario> usuarios;
-    private Usuario usuario;
-    public int[] idsConvites;
+    private static ArvoreBMais_ChaveComposta_String_Int indiceIndireto;
+    private static CRUD<Convites> convites;
+    private static CRUD<Grupos> grupos;
+    private static CRUD<Usuario> usuarios;
 
-    public Inscricao(Usuario usuario) throws Exception {
-        this.usuario = usuario;
-        this.idsConvites = indiceInvertido.read(this.usuario.chaveSecundaria());
+    public static void setBancos(CRUD<Usuario> amigosU, CRUD<Grupos> amigosG, CRUD<Convites> amigosC){
+        convites = amigosC;
+        grupos = amigosG;
+        usuarios = amigosU;
     }
 
-    public void visualizarNovosConvites() throws Exception {
+    public static void visualizarNovosConvites(Usuario usuario) throws Exception {
+        int[] idsConvites = indiceIndireto.read(usuario.chaveSecundaria());
+
         if (idsConvites.length > 0) {
             MyIO.println("Você possui novos convites!");
             MyIO.println("Escolha qual convite deseja aceitar ou recusar:\n");
@@ -58,25 +59,25 @@ class Inscricao {
 
                             // TODO: Criar um Novo Registro de Participação por meio do método create() do CRUD de Participação <- Não sei se é pra fazer
 
-                            indiceInvertido.delete(usuario.chaveSecundaria(), idsConvites[conviteEscolhido - 1]);
+                              convites.indiceInvertido.delete(usuario.chaveSecundaria(), idsConvites[conviteEscolhido - 1]);
 
                             MyIO.println("Convite aceito com sucesso!\n");
 
-                            visualizarNovosConvites();
+                            visualizarNovosConvites(usuario);
 
                             break;
                         case 'R':
                             atualizarEstadoConvite(idsConvites[conviteEscolhido - 1], 2);
 
-                            indiceInvertido.delete(usuario.chaveSecundaria(), idsConvites[conviteEscolhido - 1]);
+                            convites.indiceInvertido.delete(usuario.chaveSecundaria(), idsConvites[conviteEscolhido - 1]);
 
                             MyIO.println("Convite recusado com sucesso!\n");
 
-                            visualizarNovosConvites();
+                            visualizarNovosConvites(usuario);
 
                             break;
                         case 'V':
-                            visualizarNovosConvites();
+                            visualizarNovosConvites(usuario);
 
                             break;
                         default:
@@ -89,7 +90,17 @@ class Inscricao {
         }
     }
 
-    private void lerConvite(int idConvite, int numeroConvite) throws Exception {
+    public static int getTotalConvites(Usuario usuario) throws Exception {
+        int total;
+        try{
+           total = indiceIndireto.read(usuario.chaveSecundaria()).length;
+        }catch (NullPointerException e){
+            total = 0;
+        }
+        return total;
+    }
+
+    private static void lerConvite(int idConvite, int numeroConvite) throws Exception {
         Convites convite = convites.read(idConvite);
 
         String[] auxiliar_1 = convite.chaveSecundaria().split("|");
@@ -111,14 +122,14 @@ class Inscricao {
         escreverConvite(numeroConvite, nomeGrupo, momentoConvite, nomeAdministrador);
     }
 
-    private void escreverConvite(int numeroConvite, String nomeGrupo, long momentoConvite, String nomeAdministrador) {
+    private static void escreverConvite(int numeroConvite, String nomeGrupo, long momentoConvite, String nomeAdministrador) {
         MyIO.println(numeroConvite + ". " + nomeGrupo);
         // TODO: Manejar o formato da Data/Hora <- Preciso ver como está na classe Convites
         MyIO.println("   Convidado em " + momentoConvite);
         MyIO.println("   por " + nomeAdministrador);
     }
 
-    private void atualizarEstadoConvite(int idConvite, int estadoConvite) throws Exception {
+    private static void atualizarEstadoConvite(int idConvite, int estadoConvite) throws Exception {
         Convites convite = convites.read(idConvite);
 
         convite.setEstado((byte) estadoConvite);
