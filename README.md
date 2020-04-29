@@ -25,9 +25,14 @@ A main é dividia em seções, com indicações do tipo de Classe base que tal s
 * ````ArvoreBMais_String_Int````: Árvore B+ que associa chave secundária, em string, e chave primária, em int. 
 * ````HashExtensível````: HashExtensível usada para buscas individuais, através de funções de hash. Muito boa para índices indiretos.
 
+### Classes de IO
+A classe ````MYIO```` é utilizada para muitas operações de input/output, já que lida com erros de entrada, buffer e é menos verbosa de utilizar.
+
 ### Ambiente de testes
 A classe ````AmigoOcultoTeste```` serve exclusivamente para testar implementação de novas funcionalidades, já que não possui menu nem nada. São implementados apenas os métodos necessários e a criação de instâncias
 é *hard coded*, acelerando o desenvolvimento, teste e debugging.
+
+
 
 # Responsáveis pelas partes finais da entrega e listagem de bugs conhecidos
 

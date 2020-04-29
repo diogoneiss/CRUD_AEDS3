@@ -56,8 +56,13 @@ public class AmigoOculto {
                                 } while (opcaoEscolhidaGrupos != 0);
                                 break;
                             }
-                            //Usuários
+                            // convites
                             case 3: {
+                                int opcaoEscolhidaConvites = 0;
+                                do {
+                                    opcaoEscolhidaConvites = menuLogadoConvite(conviteAmigoOculto, gruposAmigoOculto);
+                                } while (opcaoEscolhidaConvites != 0);
+
                                 break;
                             }
                             //sair
