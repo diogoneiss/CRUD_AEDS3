@@ -1,19 +1,3 @@
-/*
-    TODO: Fazer as devidas alterações na função main() para verificar se existem Novos Convites
-    Alterações na função main() que eu sugiro:
-    Antes de escrever o Menu de Início,
-    criar um objeto da classe Inscrição e verificar se idsConvites.length > 0,
-    caso ela retorne verdadeiro, escrever "Novos Convites: " + idsConvites.length,
-    caso não, escrever "Novos Convites: 0",
-    Quando o usuário escolher essa opção, evocar a função visualizarNovosContives()
- */
-
-/*
-    Eu não pude compilar o código pelo fato da ausência da classe Convites
-    Se aparecer algum erro é só me avisar
-    Apague esse comentário e tudo acima dele assim que o projeto estiver pronto
- */
-
 class Inscricao {
     private static ArvoreBMais_ChaveComposta_String_Int indiceIndireto;
     private static CRUD<Convites> convites;
@@ -57,9 +41,9 @@ class Inscricao {
                         case 'A':
                             atualizarEstadoConvite(idsConvites[conviteEscolhido - 1], 1);
 
-                            // TODO: Criar um Novo Registro de Participação por meio do método create() do CRUD de Participação <- Não sei se é pra fazer
+                            // TODO: Criar um Novo Registro de Participação por meio do método create() do CRUD de Participação
 
-                              convites.indiceInvertido.delete(usuario.chaveSecundaria(), idsConvites[conviteEscolhido - 1]);
+                            convites.indiceInvertido.delete(usuario.chaveSecundaria(), idsConvites[conviteEscolhido - 1]);
 
                             MyIO.println("Convite aceito com sucesso!\n");
 
