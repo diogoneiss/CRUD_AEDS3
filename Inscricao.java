@@ -95,7 +95,7 @@ class Inscricao {
         String[] auxiliar_1 = convite.chaveSecundaria().split("|");
 
         int idGrupo = Integer.parseInt(auxiliar_1[0]);
-        long momentoConvite = convite.getMomento();
+        long momentoConvite = convite.getMomentoConvite();
 
         Grupos grupo = grupos.read(idGrupo);
 
@@ -121,7 +121,7 @@ class Inscricao {
     private void atualizarEstadoConvite(int idConvite, int estadoConvite) throws Exception {
         Convites convite = convites.read(idConvite);
 
-        convite.setEstado(estadoConvite);
+        convite.setEstado((byte) estadoConvite);
 
         convites.update(convite);
     }

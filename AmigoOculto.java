@@ -18,6 +18,7 @@ public class AmigoOculto {
 			CRUD<Usuario> usuariosAmigoOculto = new CRUD<>("amigos", Usuario.class.getConstructor());
 			CRUD<Sugestao> sugestaoAmigoOculto = new CRUD<>("sugestoes", Sugestao.class.getConstructor());
 			CRUD<Grupos> gruposAmigoOculto = new CRUD<>("Grupos", Grupos.class.getConstructor());
+			CRUD<Convites> conviteAmigoOculto = new CRUD<>("Convite", Convites.class.getConstructor());
 
 			int opcaoEscolhidaMenuLogin;
 
@@ -47,7 +48,7 @@ public class AmigoOculto {
 							case 2:{
 								int opcaoEscolhidaGrupos = 0;
 								do{
-									//opcaoEscolhidaGrupos = menuLogadoGrupos(gruposAmigoOculto);
+									opcaoEscolhidaGrupos = menuLogadoGrupos(gruposAmigoOculto, conviteAmigoOculto);
 								}while(opcaoEscolhidaGrupos!=0);
 								break;
 							}
@@ -91,6 +92,248 @@ public class AmigoOculto {
 	public static int menuInicial(){
 		int opcaoEscolhida=controladorPrograma.escolherOpcaoMenuInicial();
 		return opcaoEscolhida;
+	}
+// ============== MÉTODOS DE CONVITE =================================================================================
+
+	public static void cancelamentoConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto)throws Exception{
+		MyIO.println("ESCOLHA O GRUPO: ");
+		int[] idsGrupos=gruposAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+		int i = 1;
+		for(i=1;i<=idsGrupos.length;i++){
+			Grupos temp=gruposAmigoOculto.read(idsGrupos[i-1]);
+			Calendar atual = Calendar.getInstance();
+			Calendar data = Calendar.getInstance();
+			data.setTimeInMillis(temp.getMomentoSorteio());
+			if(temp.getAtivo() && temp.getMomentoSorteio()>atual.getTimeInMillis()){
+				MyIO.println(i + ". " + temp.getNome());
+				MyIO.println("Local: " + temp.getLocalEncontro());
+				MyIO.println("Momento do sorteio:" + data.get(Calendar.DATE) + "/" + data.get(Calendar.MONTH) + "/" + data.get(Calendar.YEAR) + " " + data.get(Calendar.HOUR_OF_DAY));
+			}
+		}
+		MyIO.print("Grupo: ");
+		int opcao;
+		try {
+			opcao= MyIO.readInt();
+			if(opcao<0 || opcao>i){
+				MyIO.println("Opção inválida");
+				opcao=0;
+			}
+			if(opcao==0){
+				System.out.println("Retornando..");
+				menuLogadoConvite(amigoOculto, gruposAmigoOculto);
+				return;
+			}
+			else{
+				Grupos grupo=gruposAmigoOculto.read(idsGrupos[opcao-1]);
+				MyIO.println("Grupo: " + grupo.getNome());
+				int[] idsConvites=amigoOculto.índiceIndiretoIntInt.read(idsGrupos[opcao-1]);
+				int j=1;
+				for(j=1;j<=idsConvites.length;j++){
+					Convites temp=amigoOculto.read(idsConvites[j-1]);
+					if(temp.getMomentoConvite()==0){
+						MyIO.println(i+". "+temp.getEmail());
+					}
+				}
+				MyIO.print("Convite: ");
+				int opcaocv;
+				try {
+					opcaocv= MyIO.readInt();
+					if(opcaocv<0 || opcaocv>j){
+						MyIO.println("Opção inválida");
+						opcaocv=0;
+					}
+					if(opcaocv==0){
+						System.out.println("Retornando..");
+						menuLogadoConvite(amigoOculto, gruposAmigoOculto);
+						return;
+					}
+					else if(opcaocv>0 && opcaocv<=j){
+						Convites temp=amigoOculto.read(idsConvites[opcaocv-1]);
+						MyIO.println("Deseja realmente cancelar o convite para " + temp.getEmail() + "? 1 para sim, 0 para nao");
+						if(MyIO.readInt()!=1){
+							MyIO.println("Retornando ao menu");
+							menuLogadoConvite(amigoOculto, gruposAmigoOculto);
+							return;
+						}
+						else{
+							byte byte3=3;
+							Convites novo = new Convites(temp.getId(), temp.getIdGrupo(), temp.getEmail(), temp.getMomentoConvite(), byte3);
+							amigoOculto.update(novo);
+							amigoOculto.índiceIndireto.delete(temp.chaveSecundaria());
+							MyIO.println("Convite cancelado com sucesso");
+							MyIO.println("Retornando ao menu");
+							menuLogadoConvite(amigoOculto, gruposAmigoOculto);
+							return;
+						}
+					}
+				} catch (InputMismatchException erroInput) {
+					System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
+					opcaocv = 0;
+				}
+			}
+		} catch (InputMismatchException erroInput) {
+			System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
+			opcao = 0;
+		}
+
+		pressioneTeclaParaContinuar();
+	}
+	public static void emissaoConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto)throws Exception{
+		MyIO.println("ESCOLHA O GRUPO: ");
+		int[] idsGrupos=gruposAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+		int i = 1;
+		for(i=1;i<=idsGrupos.length;i++){
+			Grupos temp=gruposAmigoOculto.read(idsGrupos[i-1]);
+			Calendar atual = Calendar.getInstance();
+			Calendar data = Calendar.getInstance();
+			data.setTimeInMillis(temp.getMomentoSorteio());
+			if(temp.getAtivo() && temp.getMomentoSorteio()>atual.getTimeInMillis()){
+				MyIO.println(i + ". " + temp.getNome());
+				MyIO.println("Local: " + temp.getLocalEncontro());
+				MyIO.println("Momento do sorteio:" + data.get(Calendar.DATE) + "/" + data.get(Calendar.MONTH) + "/" + data.get(Calendar.YEAR) + " " + data.get(Calendar.HOUR_OF_DAY));
+			}
+		}
+		MyIO.print("Grupo: ");
+		int opcao;
+		try {
+			opcao= MyIO.readInt();
+			if(opcao<0 || opcao>i){
+				MyIO.println("Opção inválida");
+				opcao=0;
+			}
+			if(opcao==0){
+				System.out.println("Retornando..");
+				menuLogadoConvite(amigoOculto, gruposAmigoOculto);
+				return;
+			}
+			else{
+				Grupos grupo=gruposAmigoOculto.read(idsGrupos[opcao-1]);
+				MyIO.println("Grupo: " + grupo.getNome());
+
+				int contador=1;
+				while(contador==1){
+					MyIO.println("Digite o email do convidado: ");
+					String email = MyIO.readLine();
+					int idconvite=amigoOculto.índiceIndireto.read(idsGrupos[opcao-1]+"|"+email);
+					if(email == ""){
+						MyIO.println("Email em branco, retornando ao menu de convites");
+						menuLogadoConvite(amigoOculto, gruposAmigoOculto);
+						return;
+					}
+					else if(idconvite!=-1){
+						if(amigoOculto.read(idconvite).getEstado()==0 || amigoOculto.read(idconvite).getEstado()==1){
+							MyIO.println("Convite já emitido para esse email");
+						}
+						else{
+							MyIO.println("Convite já emitido para esse email e recusado ou cancelado, deseja reenviar? 1 para sim, 0 para não");
+							if(MyIO.readInt()==1){
+								Calendar momento = Calendar.getInstance();
+								int id=-1;
+								byte byte0=0;
+								Convites temp=new Convites(id,idsGrupos[opcao-1],email,momento.getTimeInMillis(), byte0);
+								try{
+									id = amigoOculto.create(temp);
+								}catch(Exception e ){
+									MyIO.println("Erro");
+								}
+								amigoOculto.índiceIndireto.create(temp.chaveSecundaria(), temp.getId());
+								contador=0;
+							}
+						}
+					}
+					else{
+						Calendar momento = Calendar.getInstance();
+						int id=-1;
+						byte byte0=0;
+						Convites temp=new Convites(id,idsGrupos[opcao-1],email,momento.getTimeInMillis(), byte0);
+						try{
+							id = amigoOculto.create(temp);
+						}catch(Exception e ){
+							MyIO.println("Erro");
+						}
+						amigoOculto.índiceIndireto.create(temp.chaveSecundaria(), temp.getId());
+						amigoOculto.índiceIndiretoIntInt.create(controladorPrograma.getIdUsuarioAtual(),id);
+						contador=0;
+					}
+				}
+			}
+		} catch (InputMismatchException erroInput) {
+			System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
+			opcao = 0;
+		}
+		pressioneTeclaParaContinuar();
+	}
+
+	public static void listagemConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto)throws Exception{
+		MyIO.println("ESCOLHA O GRUPO: ");
+		int[] idsGrupos=gruposAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+		for(int i=1;i<=idsGrupos.length;i++){
+			Grupos temp=gruposAmigoOculto.read(idsGrupos[i-1]);
+			if(temp.getAtivo()){
+				MyIO.println(i+". "+temp.getNome());
+			}
+		}
+		MyIO.print("Grupo: ");
+		int opcao;
+		try {
+			opcao= MyIO.readInt();
+			if(opcao<=0 || opcao>idsGrupos.length){
+				MyIO.println("Opção inválida");
+			}
+			else{
+				int[] chavesConvites = amigoOculto.índiceIndiretoIntInt.read(idsGrupos[idsGrupos.length-1]);
+				for(int i=1;i<=chavesConvites.length;i++){
+					Convites temp=amigoOculto.read(chavesConvites[i]);
+					String tempestado="";
+					if(temp.getEstado()==0) tempestado="pendente";
+					else if(temp.getEstado()==1)tempestado="aceito";
+					else if(temp.getEstado()==2)tempestado="recusado";
+					else if(temp.getEstado()==3)tempestado="cancelado";
+					Calendar momento = Calendar.getInstance();
+					momento.setTimeInMillis(temp.getMomentoConvite());
+					MyIO.println(i+". "+temp.getEmail() + " (" + momento.get(Calendar.DATE) + "/" + momento.get(Calendar.MONTH) + "/" + momento.get(Calendar.YEAR) + " " + momento.get(Calendar.HOUR_OF_DAY) + " - " + tempestado + ")");
+				}
+			}
+		} catch (InputMismatchException erroInput) {
+			System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
+			opcao = 0;
+		}
+		pressioneTeclaParaContinuar();
+	}
+	public static int menuLogadoConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception{
+		int opcao;
+		try {
+			opcao = controladorPrograma.convites();
+			switch (opcao) {
+				//Listagem de convites
+				case 1: {
+					listagemConvite(amigoOculto, gruposAmigoOculto);
+					break;
+				}
+				//Emissão de convies
+				case 2: {
+					emissaoConvite(amigoOculto, gruposAmigoOculto);
+					break;
+				}
+				//Cancelamento de convies
+				case 3: {
+					cancelamentoConvite(amigoOculto, gruposAmigoOculto);
+					break;
+				}
+				//saída
+				case 0: {
+					System.out.println("Retornando..");
+					return 0;
+				}
+				default: {
+					System.out.println("Opção inválida inserida, retornando..");
+				}
+			}
+		} catch (InputMismatchException erroInput) {
+			System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
+			opcao = 0;
+		}
+		return opcao;
 	}
 
 	// ============== MÉTODOS DE GRUPO =================================================================================
@@ -405,7 +648,7 @@ public class AmigoOculto {
 		}
 		return opcao;
 	}
-	public static int gerenciamentoGrupos(CRUD<Grupos> amigoOculto)throws Exception{
+	public static int gerenciamentoGrupos(CRUD<Grupos> amigoOculto, CRUD<Convites> amigoOcultoc)throws Exception{
 		int opcao;
 		try {
 			opcao = controladorPrograma.gerenciamentoGrupos();
@@ -420,7 +663,7 @@ public class AmigoOculto {
 				}
 				//convites
 				case 2: {
-
+					menuLogadoConvite(amigoOcultoc, amigoOculto);
 					break;
 				}
 				//participantes
@@ -448,14 +691,14 @@ public class AmigoOculto {
 		}
 		return opcao;
 	}
-	public static int menuLogadoGrupos(CRUD<Grupos> amigoOculto) throws Exception{
+	public static int menuLogadoGrupos(CRUD<Grupos> amigoOculto, CRUD<Convites> amigoOcultoc) throws Exception{
 		int opcao;
 		try {
 			opcao = controladorPrograma.Grupos();
 			switch (opcao) {
 				//Criação e gerenciamento de grupos
 				case 1: {
-					gerenciamentoGrupos(amigoOculto);
+					gerenciamentoGrupos(amigoOculto, amigoOcultoc);
 					break;
 				}
 				//Participação nos grupos
@@ -689,7 +932,7 @@ public class AmigoOculto {
 				// caso ele não queira alterar, será retornada um clone do objeto passado por referência.
 				Sugestao inserir = alterarSugestaoEspecifica(retiradaDoCrud);
 
-				excluirSugestoes(amigoOculto, retiradaDoCrud.getId());
+				excluirSugestoes(amigoOculto, retiradaDoCrud);
 
 				//incluir no indice e crud
 				incluirSugestoes(amigoOculto, inserir);
@@ -808,7 +1051,7 @@ public class AmigoOculto {
 
 	}
 
-	private static void excluirSugestoes(CRUD<Sugestao> amigoOculto, int id) {
+	public static void excluirSugestoes(CRUD<Sugestao> amigoOculto) {
 
 		//terei que procurar todas as sugestoes e, se elas baterem com o id, listar
 		int idUser = controladorPrograma.getIdUsuarioAtual();
@@ -837,13 +1080,16 @@ public class AmigoOculto {
 				MyIO.println("Ok, remoção cancelada. Retornando");
 			}
 			else if( excluir > 0 && excluir <= idsSugestoes.length){
-				//excluir de fato
+
+
+				Sugestao excluida = amigoOculto.read(idsSugestoes[excluir-1]);
+				MyIO.println("Sugestão escolhida: "+excluida);
 				MyIO.print("Para confirmar  exclusão, digite [0]. Se não, não faremos nada. Opção: ");
 				int confirmacao = MyIO.readInt();
 				//chamada do método privado de exclusao
 
 				if (confirmacao == 0){
-					excluirSugestoes(amigoOculto, amigoOculto.read(excluir));
+					excluirSugestoes(amigoOculto, excluida);
 				}
 				else
 					MyIO.println("Ok, remoção cancelada. Retornando");

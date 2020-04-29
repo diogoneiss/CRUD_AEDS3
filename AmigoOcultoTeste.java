@@ -56,6 +56,9 @@ public class AmigoOcultoTeste {
                     case 3:
                        AmigoOculto.alterarSugestoes(sugestaoAmigoOculto);
                        break;
+                   case 4:
+                       AmigoOculto.excluirSugestoes(sugestaoAmigoOculto);
+                       break;
 
                    default:
                        break;
