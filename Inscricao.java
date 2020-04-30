@@ -8,6 +8,7 @@ class Inscricao {
         convites = amigosC;
         grupos = amigosG;
         usuarios = amigosU;
+        indiceIndireto = amigosC.indiceInvertido;
     }
 
     public static void visualizarNovosConvites(Usuario usuario) throws Exception {
@@ -71,6 +72,7 @@ class Inscricao {
             }
         } else {
             MyIO.println("Você não possui novos convites!\n");
+            AmigoOculto.pressioneTeclaParaContinuar();
         }
     }
 

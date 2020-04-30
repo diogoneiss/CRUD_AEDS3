@@ -48,6 +48,8 @@ Henrique
 https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-5-grupos
 
 Bugs? 
+* Na hora de criar um grupo, com 0 grupos criados, aparece algo dizendo que chaves não podem ser negativas.
+Não consegui achar exatamente onde isso acontece, porém na 2a criação de grupos o problema some.
 
 ## Parte 6 - Convites
 Guilherme
