@@ -349,16 +349,24 @@ public class AmigoOculto {
             long dataSorteio = 0;
             while (valido == false) {
                 int dia, mes, ano, hora;
+                dia=mes=ano=hora=-1;
                 Calendar atual = Calendar.getInstance();
                 Calendar novo = Calendar.getInstance();
                 do {
                     MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
+                    dia=mes=ano=hora=-1;
                     String temp = MyIO.readLine();
                     String[] aux = temp.split(" ");
-                    ano = Integer.parseInt(aux[0]);
-                    mes = Integer.parseInt(aux[1]);
-                    dia = Integer.parseInt(aux[2]);
-                    hora = Integer.parseInt(aux[3]);
+                    if(vereficaData(aux[0])){
+                        ano = Integer.parseInt(aux[0]);
+                        if(vereficaData(aux[1])){
+                            mes = Integer.parseInt(aux[1]);
+                            if(vereficaData(aux[2])){
+                                dia = Integer.parseInt(aux[2]);
+                                if(vereficaData(aux[3])) hora = Integer.parseInt(aux[3]);
+                            }
+                        }
+                    } 
                     if ((ano < 2020) || (mes < 0 || mes > 12) || (dia < 0 || dia > 31) || (hora < 0 || hora > 23)) {
                         MyIO.println("Data invalida!!! Atente-se ao formato");
                     }
@@ -380,17 +388,25 @@ public class AmigoOculto {
             valido = false;
             while (valido == false) {
                 int dia, mes, ano, hora;
+                dia=mes=ano=hora=-1;
                 Calendar sorteio = Calendar.getInstance();
                 sorteio.setTimeInMillis(dataSorteio);
                 Calendar novo = Calendar.getInstance();
                 do {
+                    dia=mes=ano=hora=-1;
                     MyIO.println("Digite o ano, o mes, o dia e a hora do encontro respectivamente seperados um espaço(ex: ano mes dia hora) : ");
                     String temp = MyIO.readLine();
                     String[] aux = temp.split(" ");
-                    ano = Integer.parseInt(aux[0]);
-                    mes = Integer.parseInt(aux[1]);
-                    dia = Integer.parseInt(aux[2]);
-                    hora = Integer.parseInt(aux[3]);
+                    if(vereficaData(aux[0])){
+                        ano = Integer.parseInt(aux[0]);
+                        if(vereficaData(aux[1])){
+                            mes = Integer.parseInt(aux[1]);
+                            if(vereficaData(aux[2])){
+                                dia = Integer.parseInt(aux[2]);
+                                if(vereficaData(aux[3])) hora = Integer.parseInt(aux[3]);
+                            }
+                        }
+                    } 
                     if ((ano < 2020) || (mes < 0 || mes > 12) || (dia < 0 || dia > 31) || (hora < 0 || hora > 23)) {
                         MyIO.println("Data invalida!!!");
                     }
@@ -429,10 +445,12 @@ public class AmigoOculto {
 
     public static void listarGrupos(CRUD<Grupos> amigoOculto) throws Exception {
         int[] idsGrupos = amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+        int nGruposValidos=0;
         for (int i = 0; i < idsGrupos.length; i++) {
             Grupos temp = amigoOculto.read(idsGrupos[i]);
             if (temp.getAtivo()) {
-                MyIO.println(i + ". " + temp.getNome());
+                MyIO.println(nGruposValidos+ ". " + temp.getNome());
+                nGruposValidos++;
             }
         }
         pressioneTeclaParaContinuar();
@@ -440,19 +458,27 @@ public class AmigoOculto {
 
     public static void alterarGrupos(CRUD<Grupos> amigoOculto) throws Exception {
         int[] idsGrupos = amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+        int nGruposValidos=0;
         for (int i = 0; i < idsGrupos.length; i++) {
             Grupos temp = amigoOculto.read(idsGrupos[i]);
             if (temp.getAtivo()) {
-                MyIO.print(i + ". ");
+                MyIO.print(nGruposValidos + ". ");
                 temp.mostrar();
+                nGruposValidos++;
             }
         }
         int alteracoes = 0;
-        MyIO.println("Digite o numero do grupo que deseja alterar ou 0 para sair: ");
+        MyIO.println("Digite o numero do grupo que deseja alterar ou -1 para sair: ");
         int alterar = MyIO.readInt();
         if (alterar >= 0) {
+            int alterarReal=0;
+            int cont=0;
+            while(cont!=alterar) {
+                Grupos temp = amigoOculto.read(idsGrupos[alterarReal++]);
+                if (temp.getAtivo()) cont++;
+            }
             if (alterar < idsGrupos.length) {
-                Grupos temp = amigoOculto.read(idsGrupos[alterar]);
+                Grupos temp = amigoOculto.read(idsGrupos[alterarReal]);
                 temp.mostrar();
                 MyIO.println("Digite o novo nome: ");
                 String nome = MyIO.readLine();
@@ -465,7 +491,7 @@ public class AmigoOculto {
                 long dataSorteio = 0;
                 while (valido == false) {
                     int dia, mes, ano, hora;
-                    dia = mes = ano = hora = 0;
+                    dia = mes = ano = hora = -1;
                     Calendar atual = Calendar.getInstance();
                     Calendar novo = Calendar.getInstance();
                     MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
@@ -475,12 +501,19 @@ public class AmigoOculto {
                         dataSorteio = temp.getMomentoSorteio();
                     } else {
                         do {
+                            dia=mes=ano=hora=-1;
                             alteracoes++;
                             String[] aux = data.split(" ");
-                            ano = Integer.parseInt(aux[0]);
-                            mes = Integer.parseInt(aux[1]);
-                            dia = Integer.parseInt(aux[2]);
-                            hora = Integer.parseInt(aux[3]);
+                            if(vereficaData(aux[0])){
+                                ano = Integer.parseInt(aux[0]);
+                                if(vereficaData(aux[1])){
+                                    mes = Integer.parseInt(aux[1]);
+                                    if(vereficaData(aux[2])){
+                                        dia = Integer.parseInt(aux[2]);
+                                        if(vereficaData(aux[3])) hora = Integer.parseInt(aux[3]);
+                                    }
+                                }
+                            } 
                             if ((ano < 2020) || (mes < 0 || mes > 12) || (dia < 0 || dia > 31) || (hora < 0 || hora > 23)) {
                                 MyIO.println("Data invalida!!!");
                                 MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
@@ -498,18 +531,20 @@ public class AmigoOculto {
                 }
                 MyIO.println("Digite o valor medio dos presentes: ");
                 String s = MyIO.readString();
-                float valor;
-                if (s.compareTo("") == 0) {
-                    valor = temp.getValor();
-                } else {
-                    alteracoes++;
-                    valor = Float.parseFloat(s);
-                }
+                float valor=-1;
+                do{
+                    if (s.compareTo("") == 0) {
+                        valor = temp.getValor();
+                    } else if(vereficaData(s)){
+                        alteracoes++;
+                        valor = Float.parseFloat(s);
+                    }
+                }while(s.compareTo("")!=0 && valor<0);
                 valido = false;
                 long dataEncontro = 0;
                 while (valido == false) {
                     int dia, mes, ano, hora;
-                    dia = mes = ano = hora = 0;
+                    dia = mes = ano = hora = -1;
                     Calendar atual = Calendar.getInstance();
                     Calendar novo = Calendar.getInstance();
                     MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
@@ -519,12 +554,19 @@ public class AmigoOculto {
                         dataEncontro = temp.getMomentoSorteio();
                     } else {
                         do {
+                            dia=mes=ano=hora=-1;
                             alteracoes++;
                             String[] aux = data.split(" ");
-                            ano = Integer.parseInt(aux[0]);
-                            mes = Integer.parseInt(aux[1]);
-                            dia = Integer.parseInt(aux[2]);
-                            hora = Integer.parseInt(aux[3]);
+                            if(vereficaData(aux[0])){
+                                ano = Integer.parseInt(aux[0]);
+                                if(vereficaData(aux[1])){
+                                    mes = Integer.parseInt(aux[1]);
+                                    if(vereficaData(aux[2])){
+                                        dia = Integer.parseInt(aux[2]);
+                                        if(vereficaData(aux[3])) hora = Integer.parseInt(aux[3]);
+                                    }
+                                }
+                            }       
                             if ((ano < 2020) || (mes < 0 || mes > 12) || (dia < 0 || dia > 31) || (hora < 0 || hora > 23)) {
                                 MyIO.println("Data invalida!!!");
                                 MyIO.println("Digite o ano, o mes, o dia e a hora do sorteio respectivamente seperados um espaço(ex: ano mes dia hora) : ");
@@ -562,7 +604,7 @@ public class AmigoOculto {
                     if (escolha == 1) {
                         Grupos novo = new Grupos(temp.getId(), controladorPrograma.getIdUsuarioAtual(), nome, local, observacoes, dataSorteio, dataEncontro, valor, false, true);
                         amigoOculto.update(novo);
-                        MyIO.println("Usuário alterado com sucesso!");
+                        MyIO.println("Grupo alterado com sucesso!");
                     } else {
                         MyIO.println("Nenhuma alteração foi feita");
                     }
@@ -575,17 +617,25 @@ public class AmigoOculto {
 
     public static void desativarGrupo(CRUD<Grupos> amigoOculto) throws Exception {
         int[] idsGrupos = amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+        int nGruposValidos=0;
         for (int i = 0; i < idsGrupos.length; i++) {
             Grupos temp = amigoOculto.read(idsGrupos[i]);
             if (temp.getAtivo()) {
-                MyIO.print(i + ". ");
+                MyIO.print(nGruposValidos + ". ");
                 temp.mostrar();
+                nGruposValidos++;
             }
         }
         MyIO.println("Digite o numero do grupo que deseja desativar");
         int i = MyIO.readInt();
         if (i >= 0 && i < idsGrupos.length) {
-            Grupos desativar = amigoOculto.read(idsGrupos[i]);
+            int alterarReal=0;
+            int cont=0;
+            while(cont!=i) {
+                Grupos temp = amigoOculto.read(idsGrupos[alterarReal++]);
+                if (temp.getAtivo()) cont++;
+            }
+            Grupos desativar = amigoOculto.read(idsGrupos[alterarReal]);
             desativar.mostrar();
             MyIO.println("Digite 1 se deseja confirmar a desativação: ");
             int escolha = MyIO.readInt();
@@ -595,6 +645,17 @@ public class AmigoOculto {
                 MyIO.println("Desativação efetuada com sucesso");
             }
         }
+        else{
+            MyIO.println("Opção invalida");
+        }
+    }
+    public static boolean vereficaData(String s){
+        boolean resp=true;
+        int i=0;
+        while(i<s.length() && resp==true){
+            if(!Character.isDigit(s.charAt(i++)))resp=false;
+        }
+        return resp;
     }
 
     public static int escolherOpcaoGrupos(CRUD<Grupos> amigoOculto) throws Exception {
