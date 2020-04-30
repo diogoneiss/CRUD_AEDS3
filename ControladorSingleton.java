@@ -38,9 +38,9 @@ public class ControladorSingleton {
 		System.out.println("Escolha a opção que deseja dentre as abaixo: ");
 		System.out.println("1) Sugestões de presentes");
 		System.out.println("2) Grupos");
-		System.out.println("3) Usuários");
+
 		try {
-			System.out.println("Novos convites: "+ Inscricao.getTotalConvites(userLogado));
+			System.out.println("3) Novos convites: "+ Inscricao.getTotalConvites(userLogado));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

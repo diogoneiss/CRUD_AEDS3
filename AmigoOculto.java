@@ -58,11 +58,7 @@ public class AmigoOculto {
                             }
                             // convites
                             case 3: {
-                                int opcaoEscolhidaConvites = 0;
-                                do {
-                                    opcaoEscolhidaConvites = menuLogadoConvite(conviteAmigoOculto, gruposAmigoOculto);
-                                } while (opcaoEscolhidaConvites != 0);
-
+                                   Inscricao.visualizarNovosConvites(usuariosAmigoOculto.read(controladorPrograma.getIdUsuarioAtual()));
                                 break;
                             }
                             //sair
