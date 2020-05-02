@@ -267,10 +267,10 @@ public class AmigoOculto {
     public static void listagemConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
         MyIO.println("ESCOLHA O GRUPO: ");
         int[] idsGrupos = gruposAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
-        for (int i = 1; i <= idsGrupos.length; i++) {
-            Grupos temp = gruposAmigoOculto.read(idsGrupos[i - 1]);
+        for (int i = 0; i < idsGrupos.length; i++) {
+            Grupos temp = gruposAmigoOculto.read(idsGrupos[i]);
             if (temp.getAtivo()) {
-                MyIO.println(i + ". " + temp.getNome());
+                MyIO.println(i + 1 + ". " + temp.getNome());
             }
         }
         MyIO.print("Grupo: ");
@@ -281,7 +281,7 @@ public class AmigoOculto {
                 MyIO.println("Opção inválida");
             } else {
                 int[] chavesConvites = amigoOculto.índiceIndiretoIntInt.read(idsGrupos[idsGrupos.length - 1]);
-                for (int i = 1; i <= chavesConvites.length; i++) {
+                for (int i = 0; i < chavesConvites.length; i++) {
                     Convites temp = amigoOculto.read(chavesConvites[i]);
                     String tempestado = "";
                     if (temp.getEstado() == 0) tempestado = "pendente";
@@ -290,7 +290,7 @@ public class AmigoOculto {
                     else if (temp.getEstado() == 3) tempestado = "cancelado";
                     Calendar momento = Calendar.getInstance();
                     momento.setTimeInMillis(temp.getMomentoConvite());
-                    MyIO.println(i + ". " + temp.getEmail() + " (" + momento.get(Calendar.DATE) + "/" + momento.get(Calendar.MONTH) + "/" + momento.get(Calendar.YEAR) + " " + momento.get(Calendar.HOUR_OF_DAY) + " - " + tempestado + ")");
+                    MyIO.println(i + 1 + ". " + temp.getEmail() + " (" + momento.get(Calendar.DATE) + "/" + momento.get(Calendar.MONTH) + "/" + momento.get(Calendar.YEAR) + " " + momento.get(Calendar.HOUR_OF_DAY) + " - " + tempestado + ")");
                 }
             }
         } catch (InputMismatchException erroInput) {
