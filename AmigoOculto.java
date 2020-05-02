@@ -253,6 +253,10 @@ public class AmigoOculto {
                         }
                         amigoOculto.índiceIndireto.create(temp.chaveSecundaria(), temp.getId());
                         amigoOculto.índiceIndiretoIntInt.create(controladorPrograma.getIdUsuarioAtual(), id);
+
+                        String[] auxiliar = temp.chaveSecundaria().split("\\|");
+
+                        amigoOculto.indiceInvertido.create(auxiliar[1], temp.getId());
                         contador = 0;
                     }
                 }
@@ -438,7 +442,6 @@ public class AmigoOculto {
                 } catch (Exception e) {
                     MyIO.println("Erro");
                 }
-                //TODO observer problema nessa linha, em que printa "chaves não podem ser negativas"
                 amigoOculto.índiceIndiretoIntInt.create(controladorPrograma.getIdUsuarioAtual(), id);
             }
         }
@@ -1266,11 +1269,9 @@ public class AmigoOculto {
                     temp.setId(novoId);
 
                     System.out.println("Usuário cadastrado com sucesso\n");
-                    pressioneTeclaParaContinuar();
 
                 } else {
                     System.out.println("Cadastro cancelado\n");
-                    pressioneTeclaParaContinuar();
 
                 }
             } else {
