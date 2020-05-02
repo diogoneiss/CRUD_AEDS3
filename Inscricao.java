@@ -1,10 +1,12 @@
+import java.util.Calendar;
+
 class Inscricao {
     private static ArvoreBMais_ChaveComposta_String_Int indiceIndireto;
     private static CRUD<Convites> convites;
     private static CRUD<Grupos> grupos;
     private static CRUD<Usuario> usuarios;
 
-    public static void setBancos(CRUD<Usuario> amigosU, CRUD<Grupos> amigosG, CRUD<Convites> amigosC){
+    public static void setBancos(CRUD<Usuario> amigosU, CRUD<Grupos> amigosG, CRUD<Convites> amigosC) {
         convites = amigosC;
         grupos = amigosG;
         usuarios = amigosU;
@@ -78,40 +80,47 @@ class Inscricao {
 
     public static int getTotalConvites(Usuario usuario) throws Exception {
         int total;
-        try{
-           total = indiceIndireto.read(usuario.chaveSecundaria()).length;
-        }catch (NullPointerException e){
+
+        try {
+            total = indiceIndireto.read(usuario.chaveSecundaria()).length;
+        } catch (NullPointerException e){
             total = 0;
         }
+
         return total;
     }
 
     private static void lerConvite(int idConvite, int numeroConvite) throws Exception {
         Convites convite = convites.read(idConvite);
 
-        String[] auxiliar_1 = convite.chaveSecundaria().split("|");
+        long momentoConviteMS = convite.getMomentoConvite();
+
+        String[] auxiliar_1 = convite.chaveSecundaria().split("\\|");
 
         int idGrupo = Integer.parseInt(auxiliar_1[0]);
-        long momentoConvite = convite.getMomentoConvite();
 
         Grupos grupo = grupos.read(idGrupo);
 
-        String[] auxiliar_2 = grupo.chaveSecundaria().split("|");
+        String[] auxiliar_2 = grupo.chaveSecundaria().split("\\|");
+
+        String nomeGrupo = auxiliar_2[1];
 
         int idAdministrador = Integer.parseInt(auxiliar_2[0]);
 
         Usuario administrador = usuarios.read(idAdministrador);
 
-        String nomeGrupo = grupo.getNome();
         String nomeAdministrador = administrador.getNome();
 
-        escreverConvite(numeroConvite, nomeGrupo, momentoConvite, nomeAdministrador);
+        escreverConvite(numeroConvite, nomeGrupo, momentoConviteMS, nomeAdministrador);
     }
 
-    private static void escreverConvite(int numeroConvite, String nomeGrupo, long momentoConvite, String nomeAdministrador) {
+    private static void escreverConvite(int numeroConvite, String nomeGrupo, long momentoConviteMS, String nomeAdministrador) {
+        Calendar momentoConvite = Calendar.getInstance();
+
+        momentoConvite.setTimeInMillis(momentoConviteMS);
+
         MyIO.println(numeroConvite + ". " + nomeGrupo);
-        // TODO: Manejar o formato da Data/Hora <- Preciso ver como está na classe Convites
-        MyIO.println("   Convidado em " + momentoConvite);
+        MyIO.println("   Convidado em " + momentoConvite.get(Calendar.DATE) + "/" + momentoConvite.get(Calendar.MONTH) + "/" + momentoConvite.get(Calendar.YEAR) + " às " + momentoConvite.get(Calendar.HOUR) + " horas");
         MyIO.println("   por " + nomeAdministrador);
     }
 

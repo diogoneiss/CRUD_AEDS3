@@ -23,7 +23,7 @@ public class Grupos implements Entidade{
             MyIO.println(e.getMessage());
         }
     }
-    public Grupos(int idGrupo,int IdUsuario,String nome,String localEncontro,String observacoes,long momentoSorteio,long momentoEncontro,float valor,boolean sorteado, boolean ativo){
+    public Grupos(int idGrupo,int idUsuario,String nome,String localEncontro,String observacoes,long momentoSorteio,long momentoEncontro,float valor,boolean sorteado, boolean ativo){
         this.setId(idGrupo);
         this.setIdUsuario(idUsuario);
         this.setNome(nome);
