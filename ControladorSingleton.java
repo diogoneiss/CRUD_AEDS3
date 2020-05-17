@@ -6,6 +6,7 @@ public class ControladorSingleton {
 
 	private static ControladorSingleton controlador;
 	private int idUsuarioAtual = -1;
+	private int idGrupoAtual = -1;
 
 	private ControladorSingleton() {
 		//construtor privado, já que ela é iniciada estáticamente
@@ -21,13 +22,25 @@ public class ControladorSingleton {
 		return this.idUsuarioAtual;
 	}
 
+	public int getIdGrupoAtual(){
+		return this.idGrupoAtual;
+	}
+
 	public  void salvarIdUsuarioAtual(int id) {
 		idUsuarioAtual = id;
+	}
+
+	public  void salvarIdGrupoAtual(int id) {
+		idGrupoAtual = id;
 	}
 
 	//Para evitar confusao ao finalizar as operacoes com um usuario deve-se resetar o id global
 	public  void finalizarIdUsuarioAtual() {
 		idUsuarioAtual = -1;
+	}
+
+	public  void finalizarIdGrupoAtual() {
+		idGrupoAtual = -1;
 	}
 
 	public int escolherOpcaoMenuInicial(Usuario userLogado) {
@@ -176,6 +189,23 @@ public class ControladorSingleton {
 		System.out.println("Escolha a opção que deseja dentre as abaixo: ");
 		System.out.println("\n1) Acesso ao sistema");
 		System.out.println("2) Criar novo usuário");
+
+
+		System.out.println("\n0) Sair do programa");
+		System.out.print("\nOpção: ");
+
+
+		return MyIO.readInt();
+	}
+
+	public int lerEnviarMensagem(){
+		System.out.println("Amigo Oculto 1.0");
+		System.out.println("================\n");
+		System.out.println("INÍCIO > GRUPOS > PARTICIPAÇÃO EM GRUPO>LER/ENVIAR MENSAGENS AO GRUPO\n");
+
+		System.out.println("Escolha a opção que deseja dentre as abaixo: ");
+		System.out.println("\n1) Ler mensagens");
+		System.out.println("2) Enviar mensagens");
 
 
 		System.out.println("\n0) Sair do programa");
