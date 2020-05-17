@@ -36,31 +36,32 @@ A classe ````AmigoOcultoTeste```` serve exclusivamente para testar implementaç�
 
 # Responsáveis pelas partes finais da entrega e listagem de bugs conhecidos
 
-## Parte 4 - Sugestão
+## Parte 8 - Participantes
 Diogo
 
-Bugs?
-* Problema na listagem, estou trabalhando nisso
+https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-8-participantes?module_item_id=345421
 
-## Parte 5 - Grupos de amigos
+Bugs?
+
+
+## Parte 9 - Participacoes
 Henrique
 
-https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-5-grupos
+https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-9-participacoes?module_item_id=346749
 
 Bugs? 
-* Na hora de criar um grupo, com 0 grupos criados, aparece algo dizendo que chaves não podem ser negativas.
-Não consegui achar exatamente onde isso acontece, porém na 2a criação de grupos o problema some.
 
-## Parte 6 - Convites
+
+## Parte 10 - Mensagens
 Guilherme
 
-https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-6-convites
+https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-10-mensagens?module_item_id=329381
 
 Bugs? 
 
-## Parte 7 - Inscrição
+## Parte 11 - Sorteio
 Lorenzo
 
-https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-7-inscricao
+https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-11-sorteio?module_item_id=329379
 
 Bugs?
