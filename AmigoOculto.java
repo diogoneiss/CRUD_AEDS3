@@ -19,6 +19,7 @@ public class AmigoOculto {
             CRUD<Sugestao> sugestaoAmigoOculto = new CRUD<>("sugestoes", Sugestao.class.getConstructor());
             CRUD<Grupos> gruposAmigoOculto = new CRUD<>("grupos", Grupos.class.getConstructor());
             CRUD<Convites> conviteAmigoOculto = new CRUD<>("convite", Convites.class.getConstructor());
+            CRUD<Mensagem> mensagemAmigoOculto = new CRUD<>("mensgem", Mensagem.class.getConstructor());
 
             //setar os bancos na classe estática das inscricoes
             Inscricao.setBancos(usuariosAmigoOculto, gruposAmigoOculto, conviteAmigoOculto);
@@ -98,6 +99,42 @@ public class AmigoOculto {
     public static int menuInicial(Usuario userLogado) throws Exception {
         int opcaoEscolhida = controladorPrograma.escolherOpcaoMenuInicial(userLogado);
         return opcaoEscolhida;
+    }
+// ============== MÉTODOS DE MENSAGENS =================================================================================
+    public static void menuMensgens(CRUD<Mensagem> mensagemAmigoOculto,CRUD<Usuario> usuarioAmigoOculto) throws Exception{
+        int escolha;
+        do{
+            escolha=controladorPrograma.lerEnviarMensagem();
+            if(escolha==1){
+                int[] idsMensagens = mensagemAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdGrupoAtual());
+                int i=idsMensagens.length-1;
+                int op=1;
+                while(i>0 && op==1){
+                    int cont=0;
+                    while(cont<5 && i>0){
+                        Mensagem temp=mensagemAmigoOculto.read(idsMensagens[i--]);
+                        Usuario usuario=usuarioAmigoOculto.read(temp.getIdCriador());
+                        MyIO.println(usuario.getNome()+" enviou:");
+                        MyIO.println(temp.getMensagem()+"\n");
+                        cont++;
+                    }
+                    if(i>0){
+                        do{
+                            MyIO.println("Digite 1 para ir para a proxima pagina de mensagens ou 0 para voltar ao menu anterior: ");
+                            op=MyIO.readInt();
+                        }while(op!=0 && op!=1);
+                    }
+                }
+                
+            }
+            if(escolha==2){
+                MyIO.println("Digite a mensagem que deseja enviar: ");
+                String mensagem=MyIO.readLine();
+                Mensagem temp=new Mensagem(-1,controladorPrograma.getIdGrupoAtual(),controladorPrograma.getIdUsuarioAtual(),mensagem);
+                int id=mensagemAmigoOculto.create(temp);
+                mensagemAmigoOculto.índiceIndiretoIntInt.create(controladorPrograma.getIdGrupoAtual(), id);
+            }
+        }while(escolha!=0);
     }
 // ============== MÉTODOS DE CONVITE =================================================================================
 
