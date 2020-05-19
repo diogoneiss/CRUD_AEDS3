@@ -121,6 +121,15 @@ public class Grupos implements Entidade{
     public float getValor(){
         return this.valor;
     }
+
+    public String estaSorteado(){
+        if(this.sorteado){
+            return "O grupo já realizou o sorteio.";
+        }
+        else{
+            return "O grupo ainda não realizou o sorteio.";
+        }
+    }
     public void mostrar(){
         Calendar sorteio = Calendar.getInstance();
 		sorteio.setTimeInMillis(getMomentoSorteio());

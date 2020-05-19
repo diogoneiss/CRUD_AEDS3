@@ -44,7 +44,7 @@ https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-8-participantes
 Bugs?
 
 
-## Parte 9 - Participacoes
+## Parte 9 - Participacao
 Henrique
 
 https://pucminas.instructure.com/courses/9019/pages/amigo-oculto-9-participacoes?module_item_id=346749
