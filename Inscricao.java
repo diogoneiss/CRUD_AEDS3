@@ -1,15 +1,17 @@
 import java.util.Calendar;
 
 class Inscricao {
-    private static ArvoreBMais_ChaveComposta_String_Int indiceIndireto;
-    private static CRUD<Convites> convites;
-    private static CRUD<Grupos> grupos;
-    private static CRUD<Usuario> usuarios;
+    public static ArvoreBMais_ChaveComposta_String_Int indiceIndireto;
+    public static CRUD<Convites> convites;
+    public static CRUD<Grupos> grupos;
+    public static CRUD<Usuario> usuarios;
+    public static CRUD<Participacao> partipacao;
 
-    public static void setBancos(CRUD<Usuario> amigosU, CRUD<Grupos> amigosG, CRUD<Convites> amigosC) {
+    public static void setBancos(CRUD<Usuario> amigosU, CRUD<Grupos> amigosG, CRUD<Convites> amigosC, CRUD<Participacao> amigosP) {
         convites = amigosC;
         grupos = amigosG;
         usuarios = amigosU;
+        partipacao = amigosP;
         indiceIndireto = amigosC.indiceInvertido;
     }
 
@@ -42,13 +44,20 @@ class Inscricao {
 
                     switch (escolha) {
                         case 'A':
+
+                            Convites tempConvite = convites.read(idsConvites[conviteEscolhido-1]);
+
                             atualizarEstadoConvite(idsConvites[conviteEscolhido - 1], 1);
 
-                            // TODO: Criar um Novo Registro de Participação por meio do método create() do CRUD de Participação
+                            // Criar um Novo Registro de Participação por meio do método create() do CRUD de Participação
+                            Participacao temp = new Participacao(usuario.getId(), tempConvite.getIdGrupo() , tempConvite.getIdUsuarioEmissor() );
+                            partipacao.create(temp);
+                            Participacao.inserir(temp);
 
                             convites.indiceInvertido.delete(usuario.chaveSecundaria(), idsConvites[conviteEscolhido - 1]);
 
                             MyIO.println("Convite aceito com sucesso!\n");
+
 
                             visualizarNovosConvites(usuario);
 

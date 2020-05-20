@@ -1,7 +1,7 @@
 import java.io.*;
 
 public class Convites implements Entidade{
-    private int idConvite, idGrupo;
+    private int idConvite, idGrupo, idUsuarioEmissor;
     private String email;
     private long momentoConvite;
     private byte estado;
@@ -11,9 +11,10 @@ public class Convites implements Entidade{
         momentoConvite=-1;
         estado=0;
     }
-    public Convites(int idC, int idG, String em, long moment, byte est){
+    public Convites(int idC, int idG, int idUC, String em, long moment, byte est){
+        idUsuarioEmissor = idUC;
         idConvite= idC;
-	idGrupo= idG;
+	    idGrupo= idG;
         email=em;
         momentoConvite=moment;
         estado=est;
@@ -33,6 +34,9 @@ public class Convites implements Entidade{
     public int getIdGrupo(){
         return this.idGrupo;
     }
+    public int getIdUsuarioEmissor(){
+        return this.idUsuarioEmissor;
+    }
     public void setEmail(String email){
         this.email=email;
     }
@@ -51,11 +55,13 @@ public class Convites implements Entidade{
     public byte getEstado(){
         return this.estado;
     }
+
     public byte[] toByteArray() throws IOException{
         ByteArrayOutputStream dados = new ByteArrayOutputStream();
         DataOutputStream saida = new DataOutputStream(dados);
         saida.writeInt(idConvite);
         saida.writeInt(idGrupo);
+        saida.writeInt(idUsuarioEmissor);
         saida.writeUTF(email);
         saida.writeLong(momentoConvite);
         saida.writeByte(estado);
@@ -66,6 +72,7 @@ public class Convites implements Entidade{
         DataInputStream entrada = new DataInputStream(dados);
         this.setId(entrada.readInt());
         this.setIdGrupo(entrada.readInt());
+        this.idUsuarioEmissor = entrada.readInt();
         this.setEmail(entrada.readUTF());
         this.setMomentoConvite(entrada.readLong());
         this.setEstado(entrada.readByte());

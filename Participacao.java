@@ -1,10 +1,51 @@
 import java.io.*;
+import java.util.HashMap;
 
 public class Participacao implements Entidade {
     private int idParticipacao;
     private int idUsuario;
     private int idGrupo;
     private int idAmigo;
+
+    public static ArvoreBMais_Int_Int arvoreIntIntGrupoParticipacao;
+
+    static {
+        try {
+            arvoreIntIntGrupoParticipacao = new ArvoreBMais_Int_Int(10,
+                        "dados" + "/" + "arvoreBIntInt." + "indiceIndiretoParticipacao1" + ".idx");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ArvoreBMais_Int_Int arvoreIntIntUsuarioParticipacao;
+
+    static {
+        try {
+            arvoreIntIntUsuarioParticipacao = new ArvoreBMais_Int_Int(10,
+                        "dados" + "/" + "arvoreBIntInt." + "indiceIndiretoParticipacao2" + ".idx");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Participacao(int idUsuario, int idGrupo, int idAmigo){
+        setIdUsuario(idUsuario);
+        setIdGrupo(idGrupo);
+        setIdAmigo(idAmigo);
+    }
+    public Participacao(byte[] bytes) {
+        try{
+            this.fromByteArray(bytes);
+        }catch(Exception e){
+            MyIO.println(e.getMessage());
+        }
+    }
+
+    public static void inserir(Participacao temp) throws IOException {
+            arvoreIntIntGrupoParticipacao.create(temp.getIdGrupo(), temp.getId());
+            arvoreIntIntUsuarioParticipacao.create(temp.getIdUsuario(), temp.getId());
+    }
 
     public int getIdParticipacao() {
         return idParticipacao;
@@ -74,7 +115,12 @@ public class Participacao implements Entidade {
         return this.idUsuario+"|"+this.idGrupo;
     }
 
-    public void listarParticipacoes(CRUD<Grupos> bancoGrupos, CRUD<Participacao> bancoParticipacao, CRUD<Usuario> bancoUsuario) throws Exception {
+    public void listarParticipacoes() throws Exception {
+        CRUD<Grupos> bancoGrupos = Inscricao.grupos;
+        CRUD<Participacao> bancoParticipacao = Inscricao.partipacao;
+        CRUD<Usuario> bancoUsuario = Inscricao.usuarios;
+
+
         int[] listaIdsGrupos = bancoGrupos.índiceIndiretoIntInt.read(this.getIdUsuario());
 
         //já li a lista de ids de grupos associados ao usuario, basta iterar uma  um
@@ -90,26 +136,125 @@ public class Participacao implements Entidade {
                 temp.mostrar();
             }
         }
-
-        //TODO pergunta ao usuario qual grupo ele quer gerenciar, irei inserir dps
-
         int idInserido = 0;
+        MyIO.print("Digite o número do grupo que você quer gerenciar.\nOpção: ");
+        idInserido = MyIO.readInt();
+
+
+        // passo3
         if(idInserido == 0){
             MyIO.println("Ok, retornando");
         }
         else{
-            //retirando o 1 pq antes eu adicionei 1, de modo a evitar que o primeiro elemento fosse 0
+            // passo 4
+            // retirando o 1 pq antes eu adicionei 1, de modo a evitar que o primeiro elemento fosse 0
             Grupos temp = bancoGrupos.read(listaIdsGrupos[idInserido-1]);
             MyIO.println("Grupo escolhido será mostrado abaixo.");
             if(temp == null){
                 MyIO.println("O grupo que você inseriu é inválido, provavelmente você inseriu um valor inválido. Retornando.");
             }
             else{
+                // passo 5
                 temp.mostrar();
                 MyIO.println(temp.estaSorteado());
-                //hora de ler as participacoes
+
+                //passo 6
+                //hora de ler as participacoes, buscando o id do grupo inserido, dentro de uma das árvores estáticas da classe.
+                // a árvore b+ int int serve pra isso.
+                int[] participacoesDoUser = Participacao.arvoreIntIntGrupoParticipacao.read(idInserido-1);
+
+                for (int i = 0; i < participacoesDoUser.length; i++) {
+                    Participacao tempP = bancoParticipacao.read(participacoesDoUser[i]);
+
+                    //evitar null ptr
+                    if(tempP != null) {
+
+                        //pegando dados do usuario
+                        Usuario tempU = bancoUsuario.read(tempP.getIdUsuario());
+
+                        if (tempU != null)
+                            MyIO.println(tempU.toString());
+                    }
+                }
             }
 
+        }
+    }
+    public void removerParticipante() throws Exception {
+        CRUD<Grupos> bancoGrupos = Inscricao.grupos;
+        CRUD<Participacao> bancoParticipacao = Inscricao.partipacao;
+        CRUD<Usuario> bancoUsuario = Inscricao.usuarios;
+
+        HashMap<Integer, Integer> presenteadosPor = new HashMap<>();
+
+
+        int[] listaIdsGrupos = bancoGrupos.índiceIndiretoIntInt.read(this.getIdUsuario());
+
+        //já li a lista de ids de grupos associados ao usuario, basta iterar uma  um
+
+
+        for(int i = 0; i<listaIdsGrupos.length; i++){
+            Grupos temp = bancoGrupos.read(listaIdsGrupos[i]);
+
+            //evitar null ptr e verificar se está ativo
+            if(temp != null && temp.getAtivo()){
+
+                MyIO.println("Grupo nº "+(i+1));
+                temp.mostrar();
+            }
+        }
+        int idInserido = 0;
+        MyIO.print("Digite o número do grupo que você quer gerenciar.\nOpção: ");
+        idInserido = MyIO.readInt();
+
+
+        // passo3
+        if(idInserido == 0){
+            MyIO.println("Ok, retornando");
+        }
+        else{
+            // passo 4
+            // retirando o 1 pq antes eu adicionei 1, de modo a evitar que o primeiro elemento fosse 0
+            Grupos temp = bancoGrupos.read(listaIdsGrupos[idInserido-1]);
+            MyIO.println("Grupo escolhido será mostrado abaixo.");
+            if(temp == null){
+                MyIO.println("O grupo que você inseriu é inválido, provavelmente você inseriu um valor inválido. Retornando.");
+            }
+            else{
+                // passo 5
+                temp.mostrar();
+                MyIO.println(temp.estaSorteado());
+
+                //passo 6
+                //hora de ler as participacoes, buscando o id do grupo inserido, dentro de uma das árvores estáticas da classe.
+                // a árvore b+ int int serve pra isso.
+                int[] participacoesDoUser = Participacao.arvoreIntIntGrupoParticipacao.read(idInserido-1);
+
+                for (int i = 0; i < participacoesDoUser.length; i++) {
+                    Participacao tempP = bancoParticipacao.read(participacoesDoUser[i]);
+
+                    //evitar null ptr
+                    if(tempP != null) {
+
+                        //pegando dados do usuario
+                        Usuario tempU = bancoUsuario.read(tempP.getIdUsuario());
+
+                        if (tempU != null) {
+                            MyIO.println("Id: " + (i+1)+ tempU.toString());
+                            if(temp.getSorteado()){
+                                // passo 7.4.1
+                                presenteadosPor.put(tempP.getIdUsuario(), tempP.getIdAmigo());
+                            }
+                        }
+                    }
+                }
+
+                //passo 8
+
+                MyIO.print("Insira o usuario da participacao que voce deseja remover, baseado na lista acima.\nOpção: ");
+                int idEscolhidoUsuario = MyIO.readInt();
+
+            }
         }
     }
 
