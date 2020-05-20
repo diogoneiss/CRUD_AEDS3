@@ -31,7 +31,8 @@ public class ControladorSingleton {
 	}
 
 	public  void salvarIdGrupoAtual(int id) {
-		idGrupoAtual = id;
+		MyIO.println("aaa"+id);
+		this.idGrupoAtual = id;
 	}
 
 	//Para evitar confusao ao finalizar as operacoes com um usuario deve-se resetar o id global

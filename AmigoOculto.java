@@ -134,7 +134,22 @@ public class AmigoOculto {
 
     public static void menuLogadoParticipacao(CRUD<Participacao> amigoOculto, CRUD<Usuario> usuarioAmigoOculto, CRUD<Mensagem> mensagemAmigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
         int opcao;
-        try {
+        try{
+            System.out.println("ESCOLHA UM DOS GRUPOS QUE VOCÊ PARTICIPA: ");
+            int[] idsGrupos = gruposAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
+            for (int i = 0; i < idsGrupos.length; i++) {
+                Grupos temp = gruposAmigoOculto.read(idsGrupos[i]);
+                if (temp.getAtivo()) {
+                    MyIO.println(i + 1 + ". " + temp.getNome());
+                }
+            }
+            MyIO.print("Grupo Numero: ");
+            int tempID;
+            do{
+                MyIO.print("Grupo Numero: ");
+                tempID=MyIO.readInt()-1;
+                if(!(tempID<0 || tempID>=idsGrupos.length)) controladorPrograma.salvarIdGrupoAtual(tempID);
+            }while(tempID<0 || tempID>=idsGrupos.length);
             opcao = controladorPrograma.Participacao(gruposAmigoOculto);
             //Visualizar participantes do grupo
             //Visualizar amigo sorteado
@@ -147,7 +162,7 @@ public class AmigoOculto {
                 case 0 -> System.out.println("Retornando..");
                 default -> System.out.println("Opção inválida inserida, retornando..");
             }
-        } catch (InputMismatchException erroInput) {
+        }catch(InputMismatchException erroInput){
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
         }
     }
@@ -155,6 +170,7 @@ public class AmigoOculto {
 
     public static void informacoesGrupo(CRUD<Grupos> gruposAmigoOculto) {
         int idGrupo = controladorPrograma.getIdGrupoAtual();
+        MyIO.println("bbb"+idGrupo);
         Calendar hoje = Calendar.getInstance();
         try {
             Grupos temp = gruposAmigoOculto.read(idGrupo);
@@ -193,23 +209,31 @@ public class AmigoOculto {
                 int[] idsMensagens = mensagemAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdGrupoAtual());
                 int i = idsMensagens.length - 1;
                 int op = 1;
-                while (i > 0 && op == 1) {
-                    int cont = 0;
-                    while (cont < 5 && i > 0) {
-                        Mensagem temp = mensagemAmigoOculto.read(idsMensagens[i--]);
-                        Usuario usuario = usuarioAmigoOculto.read(temp.getIdCriador());
-                        MyIO.println(usuario.getNome() + " enviou:");
-                        MyIO.println(temp.getMensagem() + "\n");
-                        cont++;
-                    }
-                    if (i > 0) {
-                        do {
-                            MyIO.println("Digite 1 para ir para a proxima pagina de mensagens ou 0 para voltar ao menu anterior: ");
-                            op = MyIO.readInt();
-                        } while (op != 0 && op != 1);
+                if(idsMensagens.length==0) {
+                    MyIO.println("Nenhuma Mensagem foi enviada nesse grupo");
+                    pressioneTeclaParaContinuar();
+                }
+                else{
+                    while (i >= 0 && op == 1) {
+                        int cont = 0;
+                        while (cont < 5 && i >= 0) {
+                            Mensagem temp = mensagemAmigoOculto.read(idsMensagens[i--]);
+                            Usuario usuario = usuarioAmigoOculto.read(temp.getIdCriador());
+                            MyIO.println(usuario.getNome() + " enviou:");
+                            MyIO.println(temp.getMensagem() + "\n");
+                            cont++;
+                        }
+                        if (i >= 0) {
+                            do {
+                                MyIO.println("Digite 1 para ir para a proxima pagina de mensagens ou 0 para voltar ao menu anterior: ");
+                                op = MyIO.readInt();
+                            } while (op != 0 && op != 1);
+                        }
+                        else{
+                            pressioneTeclaParaContinuar();
+                        }
                     }
                 }
-
             }
             if (escolha == 2) {
                 MyIO.println("Digite a mensagem que deseja enviar: ");
