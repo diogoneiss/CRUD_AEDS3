@@ -92,6 +92,20 @@ public class ControladorSingleton {
 
 		return MyIO.readInt();
 	}
+	public int escolherOpcaoParticipantes(){
+
+		System.out.println("Amigo Oculto 1.0");
+		System.out.println("================\n");
+		System.out.println("INÍCIO > GRUPOS > GERENCIAMENTO DE GRUPOS > PARTICIPANTES\n");
+		System.out.println("Escolha a opção que deseja dentre as abaixo: ");
+		System.out.println("1) Listagem");
+		System.out.println("2) Remoção");
+
+		System.out.println("\n0) Retornar ao menu anterior");
+		System.out.print("\nOpção: ");
+
+		return MyIO.readInt();
+	}
 
 	public int escolherOpcaoGrupos() {
 

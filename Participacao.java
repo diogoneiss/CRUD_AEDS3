@@ -215,15 +215,15 @@ public class Participacao implements Entidade {
         else{
             // passo 4
             // retirando o 1 pq antes eu adicionei 1, de modo a evitar que o primeiro elemento fosse 0
-            Grupos temp = bancoGrupos.read(listaIdsGrupos[idInserido-1]);
+            Grupos tempG = bancoGrupos.read(listaIdsGrupos[idInserido-1]);
             MyIO.println("Grupo escolhido será mostrado abaixo.");
-            if(temp == null){
+            if(tempG == null){
                 MyIO.println("O grupo que você inseriu é inválido, provavelmente você inseriu um valor inválido. Retornando.");
             }
             else{
                 // passo 5
-                temp.mostrar();
-                MyIO.println(temp.estaSorteado());
+                tempG.mostrar();
+                MyIO.println(tempG.estaSorteado());
 
                 //passo 6
                 //hora de ler as participacoes, buscando o id do grupo inserido, dentro de uma das árvores estáticas da classe.
@@ -241,7 +241,7 @@ public class Participacao implements Entidade {
 
                         if (tempU != null) {
                             MyIO.println("Id: " + (i+1)+ tempU.toString());
-                            if(temp.getSorteado()){
+                            if(tempG.getSorteado()){
                                 // passo 7.4.1
                                 presenteadosPor.put(tempP.getIdUsuario(), tempP.getIdAmigo());
                             }
@@ -253,6 +253,43 @@ public class Participacao implements Entidade {
 
                 MyIO.print("Insira o usuario da participacao que voce deseja remover, baseado na lista acima.\nOpção: ");
                 int idEscolhidoUsuario = MyIO.readInt();
+
+
+                int idParticipacaoComUserASerRemovido = participacoesDoUser[idEscolhidoUsuario-1];
+
+                //participacao com o usuario que será removido do grupo.
+                Participacao removido = bancoParticipacao.read(idParticipacaoComUserASerRemovido);
+
+                // passo 9
+                if(tempG.getSorteado()){
+
+
+                    int amigoPrejudicado = removido.getIdAmigo();
+
+                    int amigoQuePresentearia = presenteadosPor.get(amigoPrejudicado);
+
+                    // pegar a participacao que será atualizada.
+                    /**
+                     * Antigamente:
+                     *
+                     * Removido -> AmigoPrejudicado
+                     * Usuario que nao tem a quem presentear -> Removido
+                     *
+                     * Agora:
+                     *
+                     * Usuario que nao tem a quem presentear -> Amigo Prejudicado
+                     */
+                    Participacao tempP = bancoParticipacao.read(amigoQuePresentearia);
+
+                    tempP.setIdAmigo(amigoPrejudicado);
+
+                    bancoParticipacao.update(tempP);
+                }
+                // passo 10
+                bancoParticipacao.delete(removido.getId());
+                arvoreIntIntUsuarioParticipacao.delete(removido.getIdUsuario(), removido.getId());
+                arvoreIntIntGrupoParticipacao.delete(tempG.getId(), removido.getId());
+                MyIO.println("Pronto! remoção concluída.");
 
             }
         }
