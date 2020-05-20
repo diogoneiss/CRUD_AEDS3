@@ -136,7 +136,7 @@ public class Participacao implements Entidade {
                 temp.mostrar();
             }
         }
-        int idInserido = 0;
+        int idInserido;
         MyIO.print("Digite o número do grupo que você quer gerenciar.\nOpção: ");
         idInserido = MyIO.readInt();
 
@@ -203,7 +203,7 @@ public class Participacao implements Entidade {
                 temp.mostrar();
             }
         }
-        int idInserido = 0;
+        int idInserido;
         MyIO.print("Digite o número do grupo que você quer gerenciar.\nOpção: ");
         idInserido = MyIO.readInt();
 
@@ -269,15 +269,15 @@ public class Participacao implements Entidade {
                     int amigoQuePresentearia = presenteadosPor.get(amigoPrejudicado);
 
                     // pegar a participacao que será atualizada.
-                    /**
-                     * Antigamente:
-                     *
-                     * Removido -> AmigoPrejudicado
-                     * Usuario que nao tem a quem presentear -> Removido
-                     *
-                     * Agora:
-                     *
-                     * Usuario que nao tem a quem presentear -> Amigo Prejudicado
+                    /*
+                      Antigamente:
+
+                      Removido -> AmigoPrejudicado
+                      Usuario que nao tem a quem presentear -> Removido
+
+                      Agora:
+
+                      Usuario que nao tem a quem presentear -> Amigo Prejudicado
                      */
                     Participacao tempP = bancoParticipacao.read(amigoQuePresentearia);
 

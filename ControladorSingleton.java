@@ -64,6 +64,21 @@ public class ControladorSingleton {
 		return MyIO.readInt();
 	}
 
+	public int Participacao(CRUD<Grupos> ao){
+
+		System.out.println("Amigo Oculto 1.0");
+		System.out.println("================\n");
+		System.out.println("INÍCIO > GRUPOS > PARTICIPAÇÃO EM GRUPO \n");
+		AmigoOculto.informacoesGrupo(ao);
+		System.out.println("1) Visualizar participantes");
+		System.out.println("2) Visualizar amigo sorteado");
+		System.out.println("3) Ler/enviar mensagens ao grupo");
+		System.out.println("\n0) Retornar ao menu principal");
+		System.out.print("\nOpção: ");
+
+		return MyIO.readInt();
+	}
+
 	public int Grupos(){
 
 		System.out.println("Amigo Oculto 1.0");

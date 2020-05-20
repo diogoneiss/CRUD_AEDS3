@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.InputMismatchException;
 
 
@@ -171,13 +170,12 @@ public class AmigoOcultoTeste {
                     temp.setId(novoId);
 
                     System.out.println("Usuário cadastrado com sucesso\n");
-                    pressioneTeclaParaContinuar();
 
                 } else {
                     System.out.println("Cadastro cancelado\n");
-                    pressioneTeclaParaContinuar();
 
                 }
+                pressioneTeclaParaContinuar();
             } else {
                 System.out.println("ERRO! Email já cadastrado. Retornando ao menu");
 
