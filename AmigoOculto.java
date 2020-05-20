@@ -20,9 +20,11 @@ public class AmigoOculto {
             CRUD<Grupos> gruposAmigoOculto = new CRUD<>("grupos", Grupos.class.getConstructor());
             CRUD<Convites> conviteAmigoOculto = new CRUD<>("convite", Convites.class.getConstructor());
             CRUD<Mensagem> mensagemAmigoOculto = new CRUD<>("mensgem", Mensagem.class.getConstructor());
+            CRUD<Participacao> participacaoAmigoOculto = new CRUD<>("participacao", Participacao.class.getConstructor());
 
             //setar os bancos na classe estática das inscricoes
             Inscricao.setBancos(usuariosAmigoOculto, gruposAmigoOculto, conviteAmigoOculto);
+            Sorteio.setBancosDados(gruposAmigoOculto, participacaoAmigoOculto);
 
             int opcaoEscolhidaMenuLogin;
 
@@ -769,6 +771,7 @@ public class AmigoOculto {
                 }
                 //sorteio
                 case 4: {
+                    Sorteio.sortearGrupo(controladorPrograma.getIdUsuarioAtual());
 
                     break;
                 }
