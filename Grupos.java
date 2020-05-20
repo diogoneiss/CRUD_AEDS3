@@ -70,6 +70,9 @@ public class Grupos implements Entidade{
     public void setSorteado(boolean x){
         this.sorteado=x;
     }
+    public boolean getSorteado(){
+        return this.sorteado;
+    }
     public void setAtivo(boolean x){
         this.ativo=x;
     }
