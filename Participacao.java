@@ -238,88 +238,104 @@ public class Participacao implements Entidade {
 
 
         // passo3
-        if(idInserido == 0){
-            MyIO.println("Ok, retornando");
-        }
-        else{
-            // passo 4
-            // retirando o 1 pq antes eu adicionei 1, de modo a evitar que o primeiro elemento fosse 0
-            Grupos tempG = bancoGrupos.read(listaIdsGrupos[idInserido-1]);
-            MyIO.println("Grupo escolhido será mostrado abaixo.");
-            if(tempG == null){
-                MyIO.println("O grupo que você inseriu é inválido, provavelmente você inseriu um valor inválido. Retornando.");
+
+        try {
+            if(idInserido == 0){
+                MyIO.println("Ok, retornando");
             }
             else{
-                // passo 5
-                tempG.mostrar();
-                MyIO.println(tempG.estaSorteado());
+                // passo 4
+                // retirando o 1 pq antes eu adicionei 1, de modo a evitar que o primeiro elemento fosse 0
+                Grupos tempG = bancoGrupos.read(listaIdsGrupos[idInserido - 1]);
+                MyIO.println("Grupo escolhido será mostrado abaixo.");
+                if (tempG == null) {
+                    MyIO.println("O grupo que você inseriu é inválido, provavelmente você inseriu um valor inválido. Retornando.");
+                } else {
+                    // passo 5
+                    tempG.mostrar();
+                    MyIO.println(tempG.estaSorteado());
 
-                //passo 6
-                //hora de ler as participacoes, buscando o id do grupo inserido, dentro de uma das árvores estáticas da classe.
-                // a árvore b+ int int serve pra isso.
-                int[] participacoesDoUser = Participacao.arvoreIntIntGrupoParticipacao.read(idInserido-1);
+                    //passo 6
+                    //hora de ler as participacoes, buscando o id do grupo inserido, dentro de uma das árvores estáticas da classe.
+                    // a árvore b+ int int serve pra isso.
+                    int[] participacoesDoUser = Participacao.arvoreIntIntGrupoParticipacao.read(idInserido - 1);
 
-                for (int i = 0; i < participacoesDoUser.length; i++) {
-                    Participacao tempP = bancoParticipacao.read(participacoesDoUser[i]);
+                    //TODO criar e adnibistrar a exceção e não ter nenhum usuário dentro do grupo ainda
+                    int totalUsersGrupo = 0;
+                    for (int i = 0; i < participacoesDoUser.length; i++) {
+                        Participacao tempP = bancoParticipacao.read(participacoesDoUser[i]);
 
-                    //evitar null ptr
-                    if(tempP != null) {
+                        //evitar null ptr
+                        if (tempP != null) {
 
-                        //pegando dados do usuario
-                        Usuario tempU = bancoUsuario.read(tempP.getIdUsuario());
+                            //pegando dados do usuario
+                            Usuario tempU = bancoUsuario.read(tempP.getIdUsuario());
 
-                        if (tempU != null) {
-                            MyIO.println("Id: " + (i+1)+ tempU.toString());
-                            if(tempG.getSorteado()){
-                                // passo 7.4.1
-                                presenteadosPor.put(tempP.getIdUsuario(), tempP.getIdAmigo());
+                            if (tempU != null) {
+                                MyIO.println("Id: " + (i + 1) + tempU.toString());
+                                totalUsersGrupo++;
+                                if (tempG.getSorteado()) {
+                                    // passo 7.4.1
+                                    presenteadosPor.put(tempP.getIdUsuario(), tempP.getIdAmigo());
+                                }
+                            } else {
+                                System.out.println("O usuário não foi achado. Id: " + tempP.getIdUsuario());
                             }
+                        } else {
+                            System.out.println("Participação não encontrada, id da prticipação: " + participacoesDoUser[i]);
                         }
                     }
+                    if (totalUsersGrupo == 0) {
+                        throw new Exception("Empty group");
+                    }
+
+                    //passo 8
+
+                    MyIO.print("Insira o usuario da participacao que voce deseja remover, baseado na lista acima.\nOpção: ");
+                    int idEscolhidoUsuario = MyIO.readInt();
+
+
+                    int idParticipacaoComUserASerRemovido = participacoesDoUser[idEscolhidoUsuario - 1];
+
+                    //participacao com o usuario que será removido do grupo.
+                    Participacao removido = bancoParticipacao.read(idParticipacaoComUserASerRemovido);
+
+                    // passo 9
+                    if (tempG.getSorteado()) {
+
+
+                        int amigoPrejudicado = removido.getIdAmigo();
+
+                        int amigoQuePresentearia = presenteadosPor.get(amigoPrejudicado);
+
+                        // pegar a participacao que será atualizada.
+                        /*
+                          Antigamente:
+
+                          Removido -> AmigoPrejudicado
+                          Usuario que nao tem a quem presentear -> Removido
+
+                          Agora:
+
+                          Usuario que nao tem a quem presentear -> Amigo Prejudicado
+                         */
+                        Participacao tempP = bancoParticipacao.read(amigoQuePresentearia);
+
+                        tempP.setIdAmigo(amigoPrejudicado);
+
+                        bancoParticipacao.update(tempP);
+                    }
+                    // passo 10
+                    bancoParticipacao.delete(removido.getId());
+                    arvoreIntIntUsuarioParticipacao.delete(removido.getIdUsuario(), removido.getId());
+                    arvoreIntIntGrupoParticipacao.delete(tempG.getId(), removido.getId());
+                    MyIO.println("Pronto! remoção concluída.");
+
                 }
-
-                //passo 8
-
-                MyIO.print("Insira o usuario da participacao que voce deseja remover, baseado na lista acima.\nOpção: ");
-                int idEscolhidoUsuario = MyIO.readInt();
-
-
-                int idParticipacaoComUserASerRemovido = participacoesDoUser[idEscolhidoUsuario-1];
-
-                //participacao com o usuario que será removido do grupo.
-                Participacao removido = bancoParticipacao.read(idParticipacaoComUserASerRemovido);
-
-                // passo 9
-                if(tempG.getSorteado()){
-
-
-                    int amigoPrejudicado = removido.getIdAmigo();
-
-                    int amigoQuePresentearia = presenteadosPor.get(amigoPrejudicado);
-
-                    // pegar a participacao que será atualizada.
-                    /*
-                      Antigamente:
-
-                      Removido -> AmigoPrejudicado
-                      Usuario que nao tem a quem presentear -> Removido
-
-                      Agora:
-
-                      Usuario que nao tem a quem presentear -> Amigo Prejudicado
-                     */
-                    Participacao tempP = bancoParticipacao.read(amigoQuePresentearia);
-
-                    tempP.setIdAmigo(amigoPrejudicado);
-
-                    bancoParticipacao.update(tempP);
-                }
-                // passo 10
-                bancoParticipacao.delete(removido.getId());
-                arvoreIntIntUsuarioParticipacao.delete(removido.getIdUsuario(), removido.getId());
-                arvoreIntIntGrupoParticipacao.delete(tempG.getId(), removido.getId());
-                MyIO.println("Pronto! remoção concluída.");
-
+            }
+        }catch (Exception e ){
+            if(e.getMessage().equals("Empty group")){
+                System.out.println("Grupo sem usuários, impossível realizar a remoção de uma participação assim.");
             }
         }
     }
