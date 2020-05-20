@@ -107,7 +107,7 @@ public class ControladorSingleton {
 
 		return MyIO.readInt();
 	}
-	public int escolherOpcaoParticipantes(){
+	public int escolherOpcaoGerenciamentoParticipantes(){
 
 		System.out.println("Amigo Oculto 1.0");
 		System.out.println("================\n");

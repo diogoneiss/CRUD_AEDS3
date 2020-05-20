@@ -28,6 +28,11 @@ public class Participacao implements Entidade {
             e.printStackTrace();
         }
     }
+    public Participacao(){
+        setIdUsuario(-1);
+        setIdGrupo(-1);
+        setIdAmigo(-1);
+    }
 
     public Participacao(int idUsuario, int idGrupo, int idAmigo){
         setIdUsuario(idUsuario);
@@ -114,14 +119,38 @@ public class Participacao implements Entidade {
     public String chaveSecundaria() {
         return this.idUsuario+"|"+this.idGrupo;
     }
+    public static void menuGerenciamentoParticipacao(int idUsuario) throws Exception {
+        int opcao = AmigoOculto.controladorPrograma.escolherOpcaoGerenciamentoParticipantes();
 
-    public void listarParticipacoes() throws Exception {
+        switch (opcao){
+            //listagem
+            case 1 -> {
+                listarParticipacoes(idUsuario);
+            }
+            //remocao
+            case 2 -> {
+                removerParticipante(idUsuario);
+            }
+            //retorno
+            case 0 -> {
+            }
+            //num inválido
+            default -> {
+                MyIO.println("Número inválido digitado, retornando");
+            }
+
+
+        }
+    }
+
+
+    public static void listarParticipacoes(int idUser) throws Exception {
         CRUD<Grupos> bancoGrupos = Inscricao.grupos;
         CRUD<Participacao> bancoParticipacao = Inscricao.partipacao;
         CRUD<Usuario> bancoUsuario = Inscricao.usuarios;
 
 
-        int[] listaIdsGrupos = bancoGrupos.índiceIndiretoIntInt.read(this.getIdUsuario());
+        int[] listaIdsGrupos = bancoGrupos.índiceIndiretoIntInt.read(idUser);
 
         //já li a lista de ids de grupos associados ao usuario, basta iterar uma  um
 
@@ -163,11 +192,11 @@ public class Participacao implements Entidade {
                 // a árvore b+ int int serve pra isso.
                 int[] participacoesDoUser = Participacao.arvoreIntIntGrupoParticipacao.read(idInserido-1);
 
-                for (int i = 0; i < participacoesDoUser.length; i++) {
-                    Participacao tempP = bancoParticipacao.read(participacoesDoUser[i]);
+                for (int value : participacoesDoUser) {
+                    Participacao tempP = bancoParticipacao.read(value);
 
                     //evitar null ptr
-                    if(tempP != null) {
+                    if (tempP != null) {
 
                         //pegando dados do usuario
                         Usuario tempU = bancoUsuario.read(tempP.getIdUsuario());
@@ -180,7 +209,7 @@ public class Participacao implements Entidade {
 
         }
     }
-    public void removerParticipante() throws Exception {
+    public static void removerParticipante(int idUser) throws Exception {
         CRUD<Grupos> bancoGrupos = Inscricao.grupos;
         CRUD<Participacao> bancoParticipacao = Inscricao.partipacao;
         CRUD<Usuario> bancoUsuario = Inscricao.usuarios;
@@ -188,7 +217,7 @@ public class Participacao implements Entidade {
         HashMap<Integer, Integer> presenteadosPor = new HashMap<>();
 
 
-        int[] listaIdsGrupos = bancoGrupos.índiceIndiretoIntInt.read(this.getIdUsuario());
+        int[] listaIdsGrupos = bancoGrupos.índiceIndiretoIntInt.read(idUser);
 
         //já li a lista de ids de grupos associados ao usuario, basta iterar uma  um
 

@@ -1,12 +1,12 @@
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class AmigoOculto {
 
     //Singleton controlador
-    private static final ControladorSingleton controladorPrograma = ControladorSingleton.getInstance();
+    public static final ControladorSingleton controladorPrograma = ControladorSingleton.getInstance();
 
     public static void main(String[] args) {
 
@@ -52,25 +52,17 @@ public class AmigoOculto {
 
                                     //saída do menu logado
                                 } while (opcaoEscolhidaSugestoes != 0);
-                                break;
                             }
                             case 2 -> {
-                                int opcaoEscolhidaGrupos = 0;
+                                int opcaoEscolhidaGrupos;
                                 do {
                                     opcaoEscolhidaGrupos = menuLogadoGrupos(gruposAmigoOculto, conviteAmigoOculto, usuariosAmigoOculto, participacaoAmigoOculto, mensagemAmigoOculto);
                                 } while (opcaoEscolhidaGrupos != 0);
-                                break;
                             }
-                            case 3 -> {
-                                Inscricao.visualizarNovosConvites(usuariosAmigoOculto.read(controladorPrograma.getIdUsuarioAtual()));
-                                break;
-                            }
+                            case 3 -> Inscricao.visualizarNovosConvites(usuariosAmigoOculto.read(controladorPrograma.getIdUsuarioAtual()));
                             case 0 -> {
-                                break;
                             }
-                            default -> {
-                                System.out.println("Opção inválida inserida, retornando..");
-                            }
+                            default -> System.out.println("Opção inválida inserida, retornando..");
                         }
 
 
@@ -88,21 +80,19 @@ public class AmigoOculto {
             } while (opcaoEscolhidaMenuLogin != 0);
 
 
-        } catch (NoSuchMethodException noSuchMethodException) {
-            noSuchMethodException.printStackTrace();
         } catch (InputMismatchException erroInput) {
             System.out.println("Você digitou um caractere inválido e o programa crashou por isso.");
             erroInput.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception noSuchMethodException) {
+            noSuchMethodException.printStackTrace();
         }
     }
 
-    public static int menuInicial(Usuario userLogado) throws Exception {
-        int opcaoEscolhida = controladorPrograma.escolherOpcaoMenuInicial(userLogado);
-        return opcaoEscolhida;
+    public static int menuInicial(Usuario userLogado) {
+        return controladorPrograma.escolherOpcaoMenuInicial(userLogado);
     }
-// ============== MÉTODOS DE PARTICIPAÇÃO =================================================================================
+
+    // ============== MÉTODOS DE PARTICIPAÇÃO =================================================================================
     public static void visualizarParticipantes(CRUD<Participacao> amigoOculto, CRUD<Usuario> usuariosAmigoOculto) {
         int idGrupo = controladorPrograma.getIdGrupoAtual();
         try {
@@ -121,30 +111,28 @@ public class AmigoOculto {
                 }
 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         pressioneTeclaParaContinuar();
 
     }
+
     public static void visualizarSorteado(CRUD<Participacao> amigoOculto, CRUD<Usuario> usuariosAmigoOculto) {
         int idGrupo = controladorPrograma.getIdGrupoAtual();
         int idUser = controladorPrograma.getIdUsuarioAtual();
         try {
             Participacao temp = amigoOculto.read(idUser);
-	    int idAmigo = temp.getIdAmigo();
+            int idAmigo = temp.getIdAmigo();
             Usuario tmp = usuariosAmigoOculto.read(idUser);
             System.out.println(tmp.getNome());
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         pressioneTeclaParaContinuar();
     }
-    public static int menuLogadoParticipacao(CRUD<Participacao> amigoOculto, CRUD<Usuario> usuarioAmigoOculto, CRUD<Mensagem> mensagemAmigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
+
+    public static void menuLogadoParticipacao(CRUD<Participacao> amigoOculto, CRUD<Usuario> usuarioAmigoOculto, CRUD<Mensagem> mensagemAmigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
         int opcao;
         try {
             opcao = controladorPrograma.Participacao(gruposAmigoOculto);
@@ -153,102 +141,91 @@ public class AmigoOculto {
             //Visualizar amigo sorteado
             //saída
             switch (opcao) {
-                case 1 -> {
-                    visualizarParticipantes(amigoOculto, usuarioAmigoOculto);
-                    break;
-                }
-                case 2 -> {
-                    visualizarSorteado(amigoOculto, usuarioAmigoOculto);
-                    break;
-                }
-                case 3 -> {
-                    menuMensgens(mensagemAmigoOculto, usuarioAmigoOculto);
-                    break;
-                }
-                case 0 -> {
-                    System.out.println("Retornando..");
-                    return 0;
-                }
-                default -> {
-                    System.out.println("Opção inválida inserida, retornando..");
-                }
+                case 1 -> visualizarParticipantes(amigoOculto, usuarioAmigoOculto);
+                case 2 -> visualizarSorteado(amigoOculto, usuarioAmigoOculto);
+                case 3 -> menuMensgens(mensagemAmigoOculto, usuarioAmigoOculto);
+                case 0 -> System.out.println("Retornando..");
+                default -> System.out.println("Opção inválida inserida, retornando..");
             }
         } catch (InputMismatchException erroInput) {
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
-            opcao = 0;
         }
-	return opcao;
     }
 
 
     public static void informacoesGrupo(CRUD<Grupos> gruposAmigoOculto) {
         int idGrupo = controladorPrograma.getIdGrupoAtual();
-	Calendar hoje = Calendar.getInstance();
+        Calendar hoje = Calendar.getInstance();
         try {
             Grupos temp = gruposAmigoOculto.read(idGrupo);
-	    Calendar sorteio = Calendar.getInstance();
-	    sorteio.setTimeInMillis(temp.getMomentoSorteio());
-	    Calendar encontro = Calendar.getInstance();
-	    encontro.setTimeInMillis(temp.getMomentoSorteio());
+            Calendar sorteio = Calendar.getInstance();
+            sorteio.setTimeInMillis(temp.getMomentoSorteio());
+            Calendar encontro = Calendar.getInstance();
+            encontro.setTimeInMillis(temp.getMomentoSorteio());
             if (temp != null) {
                 System.out.println(temp.getNome());
-		if(hoje.getTimeInMillis()>=sorteio.getTimeInMillis()) System.out.println("O sorteio ocorreu dia " + sorteio.get(Calendar.DATE) + "/" + sorteio.get(Calendar.MONTH) + "/" + sorteio.get(Calendar.YEAR) + ", às " + sorteio.get(Calendar.HOUR) + ".");
-		else System.out.println("O sorteio ocorrerá dia " + sorteio.get(Calendar.DATE) + "/" + sorteio.get(Calendar.MONTH) + "/" + sorteio.get(Calendar.YEAR) + ", às " + sorteio.get(Calendar.HOUR) + ".");
+                if (hoje.getTimeInMillis() >= sorteio.getTimeInMillis())
+                    System.out.println("O sorteio ocorreu dia " + sorteio.get(Calendar.DATE) + "/" + sorteio.get(Calendar.MONTH) + "/" + sorteio.get(Calendar.YEAR) + ", às " + sorteio.get(Calendar.HOUR) + ".");
+                else
+                    System.out.println("O sorteio ocorrerá dia " + sorteio.get(Calendar.DATE) + "/" + sorteio.get(Calendar.MONTH) + "/" + sorteio.get(Calendar.YEAR) + ", às " + sorteio.get(Calendar.HOUR) + ".");
+
                 System.out.println("Os presentes devem ter valor aproximado de R$" + temp.getValor());
-		if(hoje.getTimeInMillis()>=encontro.getTimeInMillis()) System.out.println("O encontro ocorreu dia " + encontro.get(Calendar.DATE) + "/" + encontro.get(Calendar.MONTH) + "/" + encontro.get(Calendar.YEAR) + ", às " + encontro.get(Calendar.HOUR) + ".");
-		else System.out.println("O encontro ocorrerá dia " + encontro.get(Calendar.DATE) + "/" + encontro.get(Calendar.MONTH) + "/" + encontro.get(Calendar.YEAR) + ", às " + encontro.get(Calendar.HOUR) + ", em " + temp.getLocalEncontro());
-		if(!temp.getObservacoes().equals("") && !temp.getObservacoes().equals(" "))System.out.println("\nObservações:\ntemp.getObservacoes()");
+
+                if (hoje.getTimeInMillis() >= encontro.getTimeInMillis())
+                    System.out.println("O encontro ocorreu dia " + encontro.get(Calendar.DATE) + "/" + encontro.get(Calendar.MONTH) + "/" + encontro.get(Calendar.YEAR) + ", às " + encontro.get(Calendar.HOUR) + ".");
+                else
+                    System.out.println("O encontro ocorrerá dia " + encontro.get(Calendar.DATE) + "/" + encontro.get(Calendar.MONTH) + "/" + encontro.get(Calendar.YEAR) + ", às " + encontro.get(Calendar.HOUR) + ", em " + temp.getLocalEncontro());
+                if (!temp.getObservacoes().equals("") && !temp.getObservacoes().equals(" "))
+                    System.out.println("\nObservações:\ntemp.getObservacoes()");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         pressioneTeclaParaContinuar();
     }
 
-// ============== MÉTODOS DE MENSAGENS =================================================================================
-    public static void menuMensgens(CRUD<Mensagem> mensagemAmigoOculto,CRUD<Usuario> usuarioAmigoOculto) throws Exception{
+    // ============== MÉTODOS DE MENSAGENS =================================================================================
+    public static void menuMensgens(CRUD<Mensagem> mensagemAmigoOculto, CRUD<Usuario> usuarioAmigoOculto) throws Exception {
         int escolha;
-        do{
-            escolha=controladorPrograma.lerEnviarMensagem();
-            if(escolha==1){
+        do {
+            escolha = controladorPrograma.lerEnviarMensagem();
+            if (escolha == 1) {
                 int[] idsMensagens = mensagemAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdGrupoAtual());
-                int i=idsMensagens.length-1;
-                int op=1;
-                while(i>0 && op==1){
-                    int cont=0;
-                    while(cont<5 && i>0){
-                        Mensagem temp=mensagemAmigoOculto.read(idsMensagens[i--]);
-                        Usuario usuario=usuarioAmigoOculto.read(temp.getIdCriador());
-                        MyIO.println(usuario.getNome()+" enviou:");
-                        MyIO.println(temp.getMensagem()+"\n");
+                int i = idsMensagens.length - 1;
+                int op = 1;
+                while (i > 0 && op == 1) {
+                    int cont = 0;
+                    while (cont < 5 && i > 0) {
+                        Mensagem temp = mensagemAmigoOculto.read(idsMensagens[i--]);
+                        Usuario usuario = usuarioAmigoOculto.read(temp.getIdCriador());
+                        MyIO.println(usuario.getNome() + " enviou:");
+                        MyIO.println(temp.getMensagem() + "\n");
                         cont++;
                     }
-                    if(i>0){
-                        do{
+                    if (i > 0) {
+                        do {
                             MyIO.println("Digite 1 para ir para a proxima pagina de mensagens ou 0 para voltar ao menu anterior: ");
-                            op=MyIO.readInt();
-                        }while(op!=0 && op!=1);
+                            op = MyIO.readInt();
+                        } while (op != 0 && op != 1);
                     }
                 }
-                
+
             }
-            if(escolha==2){
+            if (escolha == 2) {
                 MyIO.println("Digite a mensagem que deseja enviar: ");
-                String mensagem=MyIO.readLine();
-                Mensagem temp=new Mensagem(-1,controladorPrograma.getIdGrupoAtual(),controladorPrograma.getIdUsuarioAtual(),mensagem);
-                int id=mensagemAmigoOculto.create(temp);
+                String mensagem = MyIO.readLine();
+                Mensagem temp = new Mensagem(-1, controladorPrograma.getIdGrupoAtual(), controladorPrograma.getIdUsuarioAtual(), mensagem);
+                int id = mensagemAmigoOculto.create(temp);
                 mensagemAmigoOculto.índiceIndiretoIntInt.create(controladorPrograma.getIdGrupoAtual(), id);
             }
-        }while(escolha!=0);
+        } while (escolha != 0);
     }
 // ============== MÉTODOS DE CONVITE =================================================================================
 
     public static void cancelamentoConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
         MyIO.println("ESCOLHA O GRUPO: ");
         int[] idsGrupos = gruposAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
-        int i = 1;
+        int i;
         for (i = 1; i <= idsGrupos.length; i++) {
             Grupos temp = gruposAmigoOculto.read(idsGrupos[i - 1]);
             Calendar atual = Calendar.getInstance();
@@ -276,7 +253,7 @@ public class AmigoOculto {
                 Grupos grupo = gruposAmigoOculto.read(idsGrupos[opcao - 1]);
                 MyIO.println("Grupo: " + grupo.getNome());
                 int[] idsConvites = amigoOculto.índiceIndiretoIntInt.read(idsGrupos[opcao - 1]);
-                int j = 1;
+                int j;
                 for (j = 1; j <= idsConvites.length; j++) {
                     Convites temp = amigoOculto.read(idsConvites[j - 1]);
                     if (temp.getMomentoConvite() == 0) {
@@ -320,7 +297,6 @@ public class AmigoOculto {
             }
         } catch (InputMismatchException erroInput) {
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
-            opcao = 0;
         }
 
         pressioneTeclaParaContinuar();
@@ -329,7 +305,7 @@ public class AmigoOculto {
     public static void emissaoConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
         MyIO.println("ESCOLHA O GRUPO: ");
         int[] idsGrupos = gruposAmigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
-        int i = 1;
+        int i;
         for (i = 1; i <= idsGrupos.length; i++) {
             Grupos temp = gruposAmigoOculto.read(idsGrupos[i - 1]);
             Calendar atual = Calendar.getInstance();
@@ -443,12 +419,11 @@ public class AmigoOculto {
             }
         } catch (InputMismatchException erroInput) {
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
-            opcao = 0;
         }
         pressioneTeclaParaContinuar();
     }
 
-    public static int menuLogadoConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
+    public static void menuLogadoConvite(CRUD<Convites> amigoOculto, CRUD<Grupos> gruposAmigoOculto) throws Exception {
         int opcao;
         try {
             opcao = controladorPrograma.convites();
@@ -457,31 +432,15 @@ public class AmigoOculto {
             //Cancelamento de convies
             //saída
             switch (opcao) {
-                case 1 -> {
-                    listagemConvite(amigoOculto, gruposAmigoOculto);
-                    break;
-                }
-                case 2 -> {
-                    emissaoConvite(amigoOculto, gruposAmigoOculto);
-                    break;
-                }
-                case 3 -> {
-                    cancelamentoConvite(amigoOculto, gruposAmigoOculto);
-                    break;
-                }
-                case 0 -> {
-                    System.out.println("Retornando..");
-                    return 0;
-                }
-                default -> {
-                    System.out.println("Opção inválida inserida, retornando..");
-                }
+                case 1 -> listagemConvite(amigoOculto, gruposAmigoOculto);
+                case 2 -> emissaoConvite(amigoOculto, gruposAmigoOculto);
+                case 3 -> cancelamentoConvite(amigoOculto, gruposAmigoOculto);
+                case 0 -> System.out.println("Retornando..");
+                default -> System.out.println("Opção inválida inserida, retornando..");
             }
         } catch (InputMismatchException erroInput) {
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
-            opcao = 0;
         }
-        return opcao;
     }
 
     // ============== MÉTODOS DE GRUPO =================================================================================
@@ -595,8 +554,8 @@ public class AmigoOculto {
     public static void listarGrupos(CRUD<Grupos> amigoOculto) throws Exception {
         int[] idsGrupos = amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
         int nGruposValidos = 0;
-        for (int i = 0; i < idsGrupos.length; i++) {
-            Grupos temp = amigoOculto.read(idsGrupos[i]);
+        for (int idsGrupo : idsGrupos) {
+            Grupos temp = amigoOculto.read(idsGrupo);
             if (temp.getAtivo()) {
                 MyIO.println(nGruposValidos + ". " + temp.getNome());
                 nGruposValidos++;
@@ -608,8 +567,8 @@ public class AmigoOculto {
     public static void alterarGrupos(CRUD<Grupos> amigoOculto) throws Exception {
         int[] idsGrupos = amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
         int nGruposValidos = 0;
-        for (int i = 0; i < idsGrupos.length; i++) {
-            Grupos temp = amigoOculto.read(idsGrupos[i]);
+        for (int idsGrupo : idsGrupos) {
+            Grupos temp = amigoOculto.read(idsGrupo);
             if (temp.getAtivo()) {
                 MyIO.print(nGruposValidos + ". ");
                 temp.mostrar();
@@ -768,8 +727,8 @@ public class AmigoOculto {
     public static void desativarGrupo(CRUD<Grupos> amigoOculto) throws Exception {
         int[] idsGrupos = amigoOculto.índiceIndiretoIntInt.read(controladorPrograma.getIdUsuarioAtual());
         int nGruposValidos = 0;
-        for (int i = 0; i < idsGrupos.length; i++) {
-            Grupos temp = amigoOculto.read(idsGrupos[i]);
+        for (int idsGrupo : idsGrupos) {
+            Grupos temp = amigoOculto.read(idsGrupo);
             if (temp.getAtivo()) {
                 MyIO.print(nGruposValidos + ". ");
                 temp.mostrar();
@@ -810,7 +769,7 @@ public class AmigoOculto {
     }
 
     public static int escolherOpcaoGrupos(CRUD<Grupos> amigoOculto) throws Exception {
-        int opcao = 0;
+        int opcao;
         try {
             opcao = controladorPrograma.escolherOpcaoGrupos();
             //listar
@@ -819,28 +778,14 @@ public class AmigoOculto {
             //desativar
             //saída
             switch (opcao) {
-                case 1 -> {
-                    listarGrupos(amigoOculto);
-                    break;
-                }
-                case 2 -> {
-                    criarGrupo(amigoOculto);
-                    break;
-                }
-                case 3 -> {
-                    alterarGrupos(amigoOculto);
-                    break;
-                }
-                case 4 -> {
-                    desativarGrupo(amigoOculto);
-                    break;
-                }
+                case 1 -> listarGrupos(amigoOculto);
+                case 2 -> criarGrupo(amigoOculto);
+                case 3 -> alterarGrupos(amigoOculto);
+                case 4 -> desativarGrupo(amigoOculto);
                 case 0 -> {
                     return 0;
                 }
-                default -> {
-                    System.out.println("Opção inválida inserida, retornando..");
-                }
+                default -> System.out.println("Opção inválida inserida, retornando..");
             }
 
         } catch (InputMismatchException erroInput) {
@@ -850,7 +795,7 @@ public class AmigoOculto {
         return opcao;
     }
 
-    public static int gerenciamentoGrupos(CRUD<Grupos> amigoOculto, CRUD<Convites> amigoOcultoc) throws Exception {
+    public static void gerenciamentoGrupos(CRUD<Grupos> amigoOculto, CRUD<Convites> amigoOcultoc) throws Exception {
         int opcao;
         try {
             opcao = controladorPrograma.gerenciamentoGrupos();
@@ -865,34 +810,18 @@ public class AmigoOculto {
                     do {
                         opcaoGrupos = escolherOpcaoGrupos(amigoOculto);
                     } while (opcaoGrupos != 0);
-                    break;
-                }
-                case 2 -> {
-                    menuLogadoConvite(amigoOcultoc, amigoOculto);
-                    break;
-                }
-                case 3 -> {
 
-                    break;
                 }
-                case 4 -> {
-                    Sorteio.sortearGrupo(controladorPrograma.getIdUsuarioAtual());
-
-                    break;
-                }
-                case 0 -> {
-                    System.out.println("Retornando..");
-                    return 0;
-                }
-                default -> {
-                    System.out.println("Opção inválida inserida, retornando..");
-                }
+                case 2 -> menuLogadoConvite(amigoOcultoc, amigoOculto);
+                case 3 -> Participacao.menuGerenciamentoParticipacao(controladorPrograma.getIdUsuarioAtual());
+                case 4 -> Sorteio.sortearGrupo(controladorPrograma.getIdUsuarioAtual());
+                case 0 -> System.out.println("Retornando..");
+                default -> System.out.println("Opção inválida inserida, retornando..");
             }
         } catch (InputMismatchException erroInput) {
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
             opcao = 0;
         }
-        return opcao;
     }
 
     public static int menuLogadoGrupos(CRUD<Grupos> amigoOculto, CRUD<Convites> amigoOcultoc, CRUD<Usuario> amigoOcultoU, CRUD<Participacao> amigoOcultoP, CRUD<Mensagem> amigoOcultoM) throws Exception {
@@ -903,21 +832,13 @@ public class AmigoOculto {
             //Participação nos grupos
             //saída
             switch (opcao) {
-                case 1 -> {
-                    gerenciamentoGrupos(amigoOculto, amigoOcultoc);
-                    break;
-                }
-                case 2 -> {
-                    menuLogadoParticipacao(amigoOcultoP, amigoOcultoU, amigoOcultoM, amigoOculto);
-                    break;
-                }
+                case 1 -> gerenciamentoGrupos(amigoOculto, amigoOcultoc);
+                case 2 -> menuLogadoParticipacao(amigoOcultoP, amigoOcultoU, amigoOcultoM, amigoOculto);
                 case 0 -> {
                     System.out.println("Retornando..");
                     return 0;
                 }
-                default -> {
-                    System.out.println("Opção inválida inserida, retornando..");
-                }
+                default -> System.out.println("Opção inválida inserida, retornando..");
             }
         } catch (InputMismatchException erroInput) {
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
@@ -931,7 +852,7 @@ public class AmigoOculto {
 
 
     public static int menuLogadoSugestao(CRUD<Sugestao> amigoOculto) {
-        int opcaoEscolhidaSugestoes = 0;
+        int opcaoEscolhidaSugestoes;
         try {
             opcaoEscolhidaSugestoes = controladorPrograma.escolherOpcaoSugestao();
             //listar
@@ -940,27 +861,17 @@ public class AmigoOculto {
             //excluir
             //saída
             switch (opcaoEscolhidaSugestoes) {
-                case 1 -> {
-                    listarSugestoes(amigoOculto);
-                    break;
-                }
-                case 2 -> {
-                    incluirSugestoes(amigoOculto);
-                    break;
-                }
+                case 1 -> listarSugestoes(amigoOculto);
+                case 2 -> incluirSugestoes(amigoOculto);
                 case 3 -> {
-                    break;
                 }
                 case 4 -> {
-                    break;
                 }
                 case 0 -> {
                     System.out.println("Retornando..");
                     return 0;
                 }
-                default -> {
-                    System.out.println("Opção inválida inserida, retornando..");
-                }
+                default -> System.out.println("Opção inválida inserida, retornando..");
             }
             System.out.print("Para voltar ao menu principal, aperte [0]." +
                     "\nPara continuar no menu de operações, aperte qualquer outro número." +
@@ -997,8 +908,6 @@ public class AmigoOculto {
                 }
 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1053,8 +962,6 @@ public class AmigoOculto {
             //adicionar a arvore B int int
             amigoOculto.índiceIndiretoIntInt.create(temp.getIdUsuario(), temp.getId());
             // System.out.printf("Acabei de adicionar a sugestão de [%s], com idSug [%d] e idUser [%d] na árvore..\n", temp.getProduto(), temp.getId(), temp.getIdUsuario());
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1079,8 +986,6 @@ public class AmigoOculto {
             amigoOculto.índiceIndiretoIntInt.create(jaCriada.getIdUsuario(), jaCriada.getId());
             //System.out.printf("Acabei de adicionar a sugestão de [%s], com idSug [%d] e idUser [%d] na árvore..\n", jaCriada.getProduto(), jaCriada.getId(), jaCriada.getIdUsuario());
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1099,7 +1004,7 @@ public class AmigoOculto {
         int idUser = controladorPrograma.getIdUsuarioAtual();
 
         //metodo retorna um int[] com todas os ids batendo a c1, que é o id do user atual
-        int[] idsSugestoes = new int[0];
+        int[] idsSugestoes;
         try {
             idsSugestoes = amigoOculto.índiceIndiretoIntInt.read(idUser);
 
@@ -1145,8 +1050,6 @@ public class AmigoOculto {
                 throw new Exception("número da opção inválido");
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1157,7 +1060,7 @@ public class AmigoOculto {
     public static Sugestao alterarSugestaoEspecifica(Sugestao antiga) {
 
         Sugestao nova = new Sugestao();
-        String entrada = "";
+        String entrada;
 
         boolean alterado = false;
 
@@ -1317,14 +1220,9 @@ public class AmigoOculto {
                 if (idTemp != -1) {
                     controladorPrograma.salvarIdUsuarioAtual(idTemp);
                 }
-                break;
             }
-            case 2 -> {
-                novoUsuario(amigoOculto);
-                break;
-            }
+            case 2 -> novoUsuario(amigoOculto);
             case 0 -> {
-                break;
             }
             default -> System.out.println("Opção inválida.. retornando ao menu principal");
         }
