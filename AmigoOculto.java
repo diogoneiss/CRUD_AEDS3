@@ -166,18 +166,17 @@ public class AmigoOculto {
                     MyIO.println((i + 1) + ". " + temp.getNome());
                 }
             }
-            MyIO.print("Grupo Numero: ");
             int tempID;
             do{
                 MyIO.print("Grupo Numero: ");
-                tempID = MyIO.readInt()-1;
-                if((tempID>0 && tempID<idsGrupos.length))
-                    controladorPrograma.salvarIdGrupoAtual(tempID);
+                tempID = MyIO.readInt();
+                if((tempID>0 && tempID<=idsGrupos.length))
+                    controladorPrograma.salvarIdGrupoAtual(idsGrupos[tempID-1]);
                 else
                     System.out.println("Opa! Grupo inválido. Repetindo. Você digitou o grupo "+tempID);
 
-            }while(tempID<0 || tempID>=idsGrupos.length);
-            System.out.println("O id do grupo que você escolheu anteriormente é "+(controladorPrograma.getIdGrupoAtual()+1));
+            }while(tempID<0 || tempID>idsGrupos.length);
+            //System.out.println("O id do grupo que você escolheu anteriormente é "+(controladorPrograma.getIdGrupoAtual()));
 
             opcao = controladorPrograma.Participacao(gruposAmigoOculto);
             //Visualizar participantes do grupo
@@ -199,7 +198,7 @@ public class AmigoOculto {
 
     public static void informacoesGrupo(CRUD<Grupos> gruposAmigoOculto) {
         int idGrupo = controladorPrograma.getIdGrupoAtual();
-        MyIO.println("bbb"+idGrupo);
+        //MyIO.println("bbb"+idGrupo);
         Calendar hoje = Calendar.getInstance();
         try {
             Grupos temp = gruposAmigoOculto.read(idGrupo);
@@ -221,7 +220,7 @@ public class AmigoOculto {
                 else
                     System.out.println("O encontro ocorrerá dia " + encontro.get(Calendar.DATE) + "/" + encontro.get(Calendar.MONTH) + "/" + encontro.get(Calendar.YEAR) + ", às " + encontro.get(Calendar.HOUR) + ", em " + temp.getLocalEncontro());
                 if (!temp.getObservacoes().equals("") && !temp.getObservacoes().equals(" "))
-                    System.out.println("\nObservações:\ntemp.getObservacoes()");
+                    System.out.println("\nObservações:\n"+temp.getObservacoes());
             }
         } catch (Exception e) {
             e.printStackTrace();
