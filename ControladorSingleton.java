@@ -31,7 +31,7 @@ public class ControladorSingleton {
 	}
 
 	public  void salvarIdGrupoAtual(int id) {
-		MyIO.println("Seu grupo atual foi salvo com sucesso, no id "+id);
+		//MyIO.println("Seu grupo atual foi salvo com sucesso, no id "+id);
 		this.idGrupoAtual = id;
 	}
 
