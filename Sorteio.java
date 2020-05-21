@@ -89,7 +89,7 @@ class Sorteio {
     }
 
     public static Grupos lerGrupo(HashMap<Integer, Integer> indiceTemporario) throws Exception {
-        MyIO.print("Grupo: ");
+        MyIO.print("Grupo ou [0] para Voltar: ");
 
         int posicaoGrupoEscolhido = MyIO.readInt();
 
