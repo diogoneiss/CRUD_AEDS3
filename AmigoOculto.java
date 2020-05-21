@@ -59,6 +59,7 @@ public class AmigoOculto {
                                 do {
                                     opcaoEscolhidaGrupos = menuLogadoGrupos(gruposAmigoOculto, conviteAmigoOculto, usuariosAmigoOculto, participacaoAmigoOculto, mensagemAmigoOculto, sugestaoAmigoOculto);
                                 } while (opcaoEscolhidaGrupos != 0);
+                                controladorPrograma.finalizarIdGrupoAtual();
                             }
                             case 3 -> Inscricao.visualizarNovosConvites(usuariosAmigoOculto.read(controladorPrograma.getIdUsuarioAtual()));
                             case 0 -> {
@@ -162,16 +163,22 @@ public class AmigoOculto {
             for (int i = 0; i < idsGrupos.length; i++) {
                 Grupos temp = gruposAmigoOculto.read(idsGrupos[i]);
                 if (temp.getAtivo()) {
-                    MyIO.println(i + 1 + ". " + temp.getNome());
+                    MyIO.println((i + 1) + ". " + temp.getNome());
                 }
             }
             MyIO.print("Grupo Numero: ");
             int tempID;
             do{
                 MyIO.print("Grupo Numero: ");
-                tempID=MyIO.readInt()-1;
-                if(!(tempID<0 || tempID>=idsGrupos.length)) controladorPrograma.salvarIdGrupoAtual(tempID);
+                tempID = MyIO.readInt()-1;
+                if((tempID>0 && tempID<idsGrupos.length))
+                    controladorPrograma.salvarIdGrupoAtual(tempID);
+                else
+                    System.out.println("Opa! Grupo inválido. Repetindo. Você digitou o grupo "+tempID);
+
             }while(tempID<0 || tempID>=idsGrupos.length);
+            System.out.println("O id do grupo que você escolheu anteriormente é "+(controladorPrograma.getIdGrupoAtual()+1));
+
             opcao = controladorPrograma.Participacao(gruposAmigoOculto);
             //Visualizar participantes do grupo
             //Visualizar amigo sorteado
@@ -890,6 +897,7 @@ public class AmigoOculto {
             System.out.println("Você inseriu um caractere inválido onde era para ser inserido um número. Retornando ao menu principal");
             opcao = 0;
         }
+
         return opcao;
     }
 

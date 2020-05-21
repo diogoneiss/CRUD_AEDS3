@@ -31,7 +31,7 @@ public class ControladorSingleton {
 	}
 
 	public  void salvarIdGrupoAtual(int id) {
-		MyIO.println("aaa"+id);
+		MyIO.println("Seu grupo atual foi salvo com sucesso, no id "+id);
 		this.idGrupoAtual = id;
 	}
 
@@ -41,6 +41,7 @@ public class ControladorSingleton {
 	}
 
 	public  void finalizarIdGrupoAtual() {
+		MyIO.println("Logoff do seu grupo atual foi feito com sucesso, no id "+this.getIdGrupoAtual());
 		idGrupoAtual = -1;
 	}
 
